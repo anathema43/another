@@ -92,13 +92,13 @@ export default function Wishlist() {
             <p className="text-organic-text opacity-75 mb-6">
               Save items you love to your wishlist and shop them later.
             </p>
-            <a 
-              href="/#/shop"
+            <Link 
+              to="/shop"
               data-cy="continue-shopping"
               className="inline-block bg-organic-primary text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition-all"
             >
               Continue Shopping
-            </a>
+            </Link>
           </div>
         ) : (
           <>
