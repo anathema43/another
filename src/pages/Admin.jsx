@@ -531,7 +531,19 @@ export default function Admin() {
             {activeTab === 'analytics' && (
               <div className="space-y-8">
                 <h2 className="text-xl font-semibold text-organic-text">Analytics Dashboard</h2>
-                <AdvancedAnalytics />
+                {displayOrders.length > 0 ? (
+                  <AdvancedAnalytics />
+                ) : (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-blue-800 mb-2">📊 Analytics Dashboard</h3>
+                    <p className="text-blue-700 mb-4">
+                      Analytics will be available once you have orders in your system.
+                    </p>
+                    <p className="text-blue-600 text-sm">
+                      Create some test orders or wait for customer orders to see analytics data.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
