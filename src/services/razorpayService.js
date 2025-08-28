@@ -61,18 +61,6 @@ class RazorpayService {
       await this.initialize();
 
       // Create order on backend first
-      let razorpayOrder;
-      try {
-        razorpayOrder = await this.createOrder(orderData);
-      } catch (error) {
-        // Handle backend service errors
-        if (error.message.includes('service unavailable') || 
-            error.message.includes('not deployed') ||
-            error.message.includes('timeout')) {
-          throw new Error('Payment service temporarily unavailable');
-        }
-        throw error;
-      }
       const razorpayOrder = await this.createOrder(orderData);
 
       const options = {
