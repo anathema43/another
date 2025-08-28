@@ -97,7 +97,7 @@ export default function Checkout() {
         paymentStatus: "pending"
       };
 
-      if (formData.paymentMethod === 'razorpay') {
+      if (formData.paymentMethod === 'card') {
         // Proceed to Razorpay payment
         setPaymentStep(true);
       } else {
