@@ -262,7 +262,6 @@ export default function Checkout() {
                   </div>
                 )}
                 </div>
-              </div>
 
               {/* Payment Information */}
               <div>
