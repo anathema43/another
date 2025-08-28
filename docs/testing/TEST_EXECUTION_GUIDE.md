@@ -69,8 +69,48 @@ npm run test src/components/__tests__/AuthenticationRouting.test.jsx
 # Checkout button tests
 npm run test src/components/__tests__/CheckoutButton.test.jsx
 
+# Firestore connectivity tests
+npm run test src/test/firebase/firestore-connectivity.test.js
+
+# Firebase authentication tests
+npm run test src/test/firebase/auth-operations.test.js
+
+# Firebase security rules tests
+npm run test src/test/firebase/security-rules.test.js
+
+# Real-time features tests
+npm run test src/test/firebase/real-time-features.test.js
+
 # Security validation tests
 npm run test src/components/__tests__/SecurityValidation.test.js
+```
+
+---
+
+## 🎯 **Test Execution Commands**
+
+### **Quick Validation**
+```bash
+# Test authentication routing quickly
+npm run test src/components/__tests__/AuthenticationRouting.test.jsx
+
+# Test Firestore connectivity quickly
+npm run test src/test/firebase/firestore-connectivity.test.js
+
+# Test in browser
+npm run cy:run --spec "cypress/e2e/authentication-routing.cy.js"
+```
+
+### **Comprehensive Testing**
+```bash
+# Run all authentication tests
+npm run test:auth
+
+# Run all Firebase tests
+npm run test:firebase
+
+# Run all E2E authentication tests
+npm run cy:run:auth
 ```
 
 ---
