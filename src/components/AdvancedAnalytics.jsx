@@ -6,7 +6,6 @@ import {
   CurrencyDollarIcon, 
   UsersIcon, 
   ShoppingCartIcon,
-  TrendingUpIcon,
   ArrowTrendingDownIcon,
   CalendarIcon,
   DocumentChartBarIcon,
@@ -14,7 +13,8 @@ import {
   FunnelIcon,
   PresentationChartLineIcon,
   UserGroupIcon,
-  BuildingStorefrontIcon
+  BuildingStorefrontIcon,
+  ArrowTrendingUpIcon
 } from '@heroicons/react/24/outline';
 import formatCurrency from '../utils/formatCurrency';
 import AnalyticsChart from './AnalyticsChart';
