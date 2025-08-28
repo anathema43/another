@@ -69,10 +69,12 @@ export default function Stories() {
   const handleDeleteStory = async (storyId) => {
     if (!window.confirm('Are you sure you want to delete this story?')) return;
     
-    try {
-      if (db) {
-        await deleteDoc(doc(db, "stories", storyId));
-      }
+        if (!db) {
+          console.warn('Firebase not configured - cannot delete story');
+          return;
+        }
+        const { doc, deleteDoc } = await import('firebase/firestore');
+        await deleteDoc(doc(db, 'stories', storyId));
       setStories(stories.filter(s => s.id !== storyId));
       if (featuredStory?.id === storyId) {
         setFeaturedStory(null);

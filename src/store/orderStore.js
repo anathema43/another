@@ -163,7 +163,9 @@ export const useOrderStore = create((set, get) => ({
         // Send status update email
         try {
           const { emailService } = await import('../services/emailService');
-          await emailService.sendOrderStatusUpdate({ ...updatedOrder, ...updateData }, status);
+          if (updatedOrder) {
+            await emailService.sendOrderStatusUpdate({ ...updatedOrder, ...updateData }, status);
+          }
         } catch (emailError) {
           console.error('Error sending status update email:', emailError);
         }

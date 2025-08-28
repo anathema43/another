@@ -33,12 +33,6 @@ export const useAuthStore = create(
         return () => {};
       }
       
-      if (!auth.onAuthStateChanged) {
-        console.warn('Firebase auth not properly initialized');
-        set({ currentUser: null, userProfile: null, loading: false });
-        return () => {};
-      }
-      
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user) {
           // CRITICAL: Always fetch fresh user profile from Firestore on auth state change
@@ -63,7 +57,7 @@ export const useAuthStore = create(
       });
       return unsubscribe;
     } catch (error) {
-      console.log("Firebase not configured, using mock auth");
+      console.warn("Firebase not configured, using demo mode");
       set({ currentUser: null, userProfile: null, loading: false });
       return () => {};
     }

@@ -28,7 +28,7 @@ export const useProductStore = create((set, get) => ({
       // Check if Firestore is available
       if (!db) {
         console.warn('Firestore not available - cannot load products');
-        set({ products: [], categories: [], loading: false });
+        set({ products: [], categories: [], loading: false, error: null });
         return [];
       }
       
@@ -44,6 +44,7 @@ export const useProductStore = create((set, get) => ({
       set({ products, categories, loading: false });
       return products;
     } catch (error) {
+      console.error('Error fetching products:', error);
       set({ error: error.message, loading: false });
       throw error;
     }

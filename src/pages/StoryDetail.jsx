@@ -17,10 +17,11 @@ export default function StoryDetail() {
   }, [id]);
 
   const fetchStory = async () => {
+    setLoading(true);
     try {
       if (!db) {
         console.warn('Firestore not available - cannot load story');
-        setError("Database not available");
+        setStory(null);
         setLoading(false);
         return;
       }
@@ -30,9 +31,12 @@ export default function StoryDetail() {
       
       if (docSnap.exists()) {
         setStory({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        setStory(null);
       }
     } catch (error) {
       console.error('Error fetching story:', error);
+      setStory(null);
     } finally {
       setLoading(false);
     }

@@ -15,7 +15,10 @@ vi.mock('firebase/firestore', () => ({
   doc: vi.fn(),
   updateDoc: vi.fn(),
   deleteDoc: vi.fn(),
-  getDoc: vi.fn()
+  getDoc: vi.fn(),
+  query: vi.fn(),
+  where: vi.fn(),
+  orderBy: vi.fn()
 }))
 
 // Mock auth store
@@ -30,14 +33,9 @@ vi.mock('../../store/authStore', () => ({
 vi.mock('../../store/productStore', () => ({
   useProductStore: () => ({
     products: [],
-    orders: [],
-    artisans: [],
     fetchProducts: vi.fn(),
-    fetchOrders: vi.fn(),
-    fetchArtisans: vi.fn(),
     updateProduct: vi.fn(),
-    deleteProduct: vi.fn(),
-    updateOrderStatus: vi.fn()
+    deleteProduct: vi.fn()
   })
 }))
 

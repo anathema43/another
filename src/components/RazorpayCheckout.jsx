@@ -70,9 +70,9 @@ export default function RazorpayCheckout({ orderData, onSuccess, onError }) {
         <div className="mt-4 p-4 bg-white rounded border">
           <h4 className="font-semibold mb-2">Shipping Address:</h4>
           <div className="text-sm text-gray-600">
-            {orderData.shippingInfo.firstName} {orderData.shippingInfo.lastName}<br />
-            {orderData.shippingInfo.address}<br />
-            {orderData.shippingInfo.city}, {orderData.shippingInfo.state} {orderData.shippingInfo.zipCode}
+            {orderData.shipping.firstName} {orderData.shipping.lastName}<br />
+            {orderData.shipping.address}<br />
+            {orderData.shipping.city}, {orderData.shipping.state} {orderData.shipping.zipCode}
           </div>
         </div>
 

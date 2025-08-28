@@ -22,11 +22,17 @@ export default function ProductDetail() {
     const fetchProduct = async () => {
       setLoading(true);
       try {
+        if (!db) {
+          console.warn('Firebase not configured - using demo mode');
+          setError("Database not available");
+          return;
+        }
+        
         // Try to get from store first
         let foundProduct = products.find((p) => p.id === id);
         
         // If not in store, fetch from Firebase
-        if (!foundProduct) {
+        if (!foundProduct && getProductById) {
           foundProduct = await getProductById(id);
         }
         

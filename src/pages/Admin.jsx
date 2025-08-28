@@ -161,10 +161,9 @@ export default function Admin() {
   const handleDeleteStory = async (storyId) => {
     if (window.confirm('Are you sure you want to delete this story?')) {
       try {
-        if (!db) return;
-        const { doc, deleteDoc } = await import('firebase/firestore');
+        if (!db) {
+          console.warn('Firebase not configured - cannot delete story');
         await deleteDoc(doc(db, 'stories', storyId));
-        setStories(stories.filter(s => s.id !== storyId));
       } catch (error) {
         alert('Error deleting story: ' + error.message);
       }
