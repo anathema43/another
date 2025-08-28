@@ -32,8 +32,20 @@ class CloudinaryService {
       uploadPreset: cloudinaryConfig.uploadPreset,
       fileName: file.name,
       fileSize: file.size,
-      fileType: file.type
+      fileType: file.type,
+      actualMimeType: file.type
     });
+    
+    // Convert JPG to JPEG if needed (some presets are strict about this)
+    if (file.type === 'image/jpg') {
+      console.log('Converting image/jpg to image/jpeg for Cloudinary compatibility');
+      // Create a new file with corrected MIME type
+      const correctedFile = new File([file], file.name.replace('.jpg', '.jpeg'), {
+        type: 'image/jpeg',
+        lastModified: file.lastModified
+      });
+      formData.set('file', correctedFile);
+    }
     
     if (options.tags) {
       formData.append('tags', Array.isArray(options.tags) ? options.tags.join(',') : options.tags);

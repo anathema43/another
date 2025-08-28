@@ -28,7 +28,7 @@ export default function ImageUpload({
     }
 
     if (!allowedTypes.includes(file.type)) {
-      throw new Error('Invalid file type. Please upload a JPEG, PNG, or WebP image.');
+      throw new Error(`Invalid file type: ${file.type}. Please upload a JPEG, PNG, or WebP image.`);
     }
   };
 
