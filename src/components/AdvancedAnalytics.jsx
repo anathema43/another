@@ -7,6 +7,7 @@ import {
   UsersIcon, 
   ShoppingCartIcon,
   ArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
   CalendarIcon,
   DocumentChartBarIcon,
   ArrowDownTrayIcon,
@@ -14,7 +15,6 @@ import {
   PresentationChartLineIcon,
   UserGroupIcon,
   BuildingStorefrontIcon,
-  ArrowTrendingUpIcon
 } from '@heroicons/react/24/outline';
 import formatCurrency from '../utils/formatCurrency';
 import AnalyticsChart from './AnalyticsChart';
@@ -452,7 +452,7 @@ export default function AdvancedAnalytics() {
 
   const formatGrowth = (growth) => {
     const isPositive = growth >= 0;
-    const Icon = isPositive ? TrendingUpIcon : ArrowTrendingDownIcon;
+    const Icon = isPositive ? ArrowTrendingUpIcon : ArrowTrendingDownIcon;
     const color = isPositive ? 'text-green-600' : 'text-red-600';
     
     return (
