@@ -67,17 +67,21 @@ class CloudinaryService {
       xhr.addEventListener('load', () => {
         if (xhr.status === 200) {
           try {
-      console.log('✅ Upload successful! View your image at:', {
+            const response = JSON.parse(xhr.responseText);
+            console.log('✅ Upload successful! View your image at:', {
+              publicId: response.public_id,
+              secureUrl: response.secure_url
+            });
+            
+            // Also log the direct clickable URL
+            console.log('🖼️ Direct image URL (click to view):', response.secure_url);
+            
             resolve({
               publicId: response.public_id,
-        directUrl: result.secureUrl,
               secureUrl: response.secure_url,
               width: response.width,
               height: response.height,
               format: response.format,
-      
-      // Also log the direct clickable URL
-      console.log('🖼️ Direct image URL (click to view):', result.secureUrl);
               bytes: response.bytes,
               version: response.version
             });
@@ -91,8 +95,8 @@ class CloudinaryService {
             reject(new Error(`Upload failed: ${errorResponse.error?.message || xhr.statusText}`));
           } catch (parseError) {
             console.error('Raw Cloudinary error response:', xhr.responseText);
-        { 
-          tags: ['darjeeling-product', 'admin-upload']
+            reject(new Error(`Upload failed: ${xhr.statusText}`));
+          }
         }
       });
 
