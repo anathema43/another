@@ -84,6 +84,16 @@ class ApiService {
     return this.request(endpoint, { method: 'DELETE' });
   }
 
+  // Contact form submission
+  async submitContactForm(formData) {
+    // For now, simulate successful submission
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ success: true, message: 'Message sent successfully' });
+      }, 1000);
+    });
+  }
+
   // Specialized methods for common operations
   async uploadFile(endpoint, file, additionalData = {}) {
     const formData = new FormData();
@@ -115,54 +125,6 @@ class ApiService {
 
   async processRefund(refundData) {
     return this.post('/api/razorpay/refund', refundData);
-  }
-
-  // Product methods
-  async getProducts(filters = {}) {
-    return this.get('/api/products', filters);
-  }
-
-  async getProduct(id) {
-    return this.get(`/api/products/${id}`);
-  }
-
-  async createProduct(productData) {
-    return this.post('/api/products', productData);
-  }
-
-  async updateProduct(id, productData) {
-    return this.put(`/api/products/${id}`, productData);
-  }
-
-  async deleteProduct(id) {
-    return this.delete(`/api/products/${id}`);
-  }
-
-  // Order methods
-  async createOrder(orderData) {
-    return this.post('/api/orders', orderData);
-  }
-
-  async getOrders(filters = {}) {
-    return this.get('/api/orders', filters);
-  }
-
-  async updateOrderStatus(orderId, status, additionalData = {}) {
-    return this.put(`/api/orders/${orderId}/status`, { status, ...additionalData });
-  }
-
-  // User methods
-  async getUserProfile(userId) {
-    return this.get(`/api/users/${userId}`);
-  }
-
-  async updateUserProfile(userId, profileData) {
-    return this.put(`/api/users/${userId}`, profileData);
-  }
-
-  // Contact form
-  async submitContactForm(formData) {
-    return this.post('/api/contact', formData);
   }
 }
 

@@ -91,7 +91,7 @@ export const generateSizes = (customSizes = null) => {
 /**
  * Get optimal image size based on container width
  */
-const getOptimalSize = (containerWidth) => {
+export const getOptimalSize = (containerWidth) => {
   if (containerWidth <= 400) return 'small';
   if (containerWidth <= 800) return 'medium';
   if (containerWidth <= 1200) return 'large';
@@ -101,7 +101,7 @@ const getOptimalSize = (containerWidth) => {
 /**
  * Preload critical images for better performance
  */
-const preloadImage = (imageUrl, sizes = 'medium') => {
+export const preloadImage = (imageUrl, sizes = 'medium') => {
   const link = document.createElement('link');
   link.rel = 'preload';
   link.as = 'image';
@@ -112,7 +112,7 @@ const preloadImage = (imageUrl, sizes = 'medium') => {
 /**
  * Lazy load images with Intersection Observer
  */
-const setupLazyLoading = () => {
+export const setupLazyLoading = () => {
   const images = document.querySelectorAll('img[data-src]');
   
   const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -143,3 +143,5 @@ export const handleImageError = (event, fallbackUrl = '/images/placeholder.jpg')
     img.alt = 'Image not available';
   }
 };
+
+export { IMAGE_SIZES, BREAKPOINTS };

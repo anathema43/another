@@ -16,9 +16,13 @@ const optimizedQueries = {
     }
     
     // Fetch from Firebase with optimized query
+    const { collection, getDocs, query, where, orderBy, limit } = await import('firebase/firestore');
+    const { db } = await import('../firebase/firebase');
+    
+    if (!db) return [];
+    
     const products = await getDocs(query(
       collection(db, "products"),
-      where("active", "==", true),
       orderBy("featured", "desc"),
       limit(50) // Limit initial load
     ));
@@ -34,6 +38,11 @@ const optimizedQueries = {
 
   // Batch write operations to reduce costs
   batchUpdateInventory: async (updates) => {
+    const { writeBatch, doc, serverTimestamp } = await import('firebase/firestore');
+    const { db } = await import('../firebase/firebase');
+    
+    if (!db) return;
+    
     const batch = writeBatch(db);
     
     updates.forEach(({ productId, quantity }) => {
@@ -100,9 +109,6 @@ const bundleOptimization = {
   preloadCriticalResources: () => {
     const criticalResources = [
       // Only preload resources that actually exist
-      // '/api/products', // Remove - we don't have this API yet
-      // '/images/logo.png', // Remove - we don't have this image
-      // '/fonts/inter.woff2' // Remove - loaded via Google Fonts
     ];
     
     criticalResources.forEach(resource => {
@@ -129,7 +135,7 @@ const freeErrorTracking = {
     };
     
     // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.error('Error logged:', errorData);
     }
     
@@ -217,16 +223,6 @@ const performanceMonitoring = {
     let readCount = 0;
     let writeCount = 0;
     
-    // Intercept Firestore operations
-    const originalGetDocs = window.firebase?.firestore?.getDocs;
-    if (originalGetDocs) {
-      window.firebase.firestore.getDocs = (...args) => {
-        readCount++;
-        console.log(`Firestore reads this session: ${readCount}`);
-        return originalGetDocs.apply(this, args);
-      };
-    }
-    
     // Track monthly usage
     const usage = JSON.parse(localStorage.getItem('firebase_usage') || '{}');
     const currentMonth = new Date().toISOString().slice(0, 7);
@@ -237,75 +233,6 @@ const performanceMonitoring = {
     
     usage[currentMonth].reads += readCount;
     localStorage.setItem('firebase_usage', JSON.stringify(usage));
-  }
-};
-
-// 6. Cost Monitoring Dashboard Data
-const costDashboard = {
-  getCurrentCosts: () => {
-    const usage = JSON.parse(localStorage.getItem('firebase_usage') || '{}');
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const monthlyUsage = usage[currentMonth] || { reads: 0, writes: 0 };
-    
-    // Estimate costs based on Firebase pricing
-    const estimatedCosts = {
-      firestore: {
-        reads: (monthlyUsage.reads / 50000) * 0.36, // $0.36 per 50K reads
-        writes: (monthlyUsage.writes / 20000) * 1.08, // $1.08 per 20K writes
-      },
-      storage: 10, // Estimated $10/month
-      functions: 15, // Estimated $15/month
-      hosting: 0, // Free tier
-      total: 0
-    };
-    
-    estimatedCosts.total = Object.values(estimatedCosts.firestore).reduce((a, b) => a + b, 0) + 
-                          estimatedCosts.storage + estimatedCosts.functions;
-    
-    return {
-      usage: monthlyUsage,
-      costs: estimatedCosts,
-      projectedMonthly: estimatedCosts.total,
-      savingsTarget: estimatedCosts.total * 0.65 // 65% reduction target
-    };
-  },
-
-  // Generate cost optimization report
-  generateReport: () => {
-    const costs = costDashboard.getCurrentCosts();
-    const optimizations = [
-      {
-        action: 'Implement query caching',
-        currentCost: costs.costs.firestore.reads,
-        optimizedCost: costs.costs.firestore.reads * 0.4,
-        savings: costs.costs.firestore.reads * 0.6,
-        effort: 'Low',
-        timeline: '2 hours'
-      },
-      {
-        action: 'Batch write operations',
-        currentCost: costs.costs.firestore.writes,
-        optimizedCost: costs.costs.firestore.writes * 0.7,
-        savings: costs.costs.firestore.writes * 0.3,
-        effort: 'Medium',
-        timeline: '4 hours'
-      },
-      {
-        action: 'Optimize image storage',
-        currentCost: costs.costs.storage,
-        optimizedCost: costs.costs.storage * 0.6,
-        savings: costs.costs.storage * 0.4,
-        effort: 'Low',
-        timeline: '3 hours'
-      }
-    ];
-    
-    return {
-      currentMonthly: costs.projectedMonthly,
-      optimizedMonthly: optimizations.reduce((sum, opt) => sum + opt.optimizedCost, 0),
-      totalSavings: optimizations.reduce((sum, opt) => sum + opt.savings, 0),
-      optimizations
-    };
   }
 };
 

@@ -56,8 +56,11 @@ if (isFirebaseConfigured) {
 export { auth, db,  functions };
 
 // Enable offline persistence for Firestore
-import { enableNetwork, disableNetwork } from "firebase/firestore";
-
-const enableOffline = () => disableNetwork(db);
-const enableOnline = () => enableNetwork(db);
+if (db) {
+  import('firebase/firestore').then(({ enableNetwork, disableNetwork }) => {
+    // Enable offline persistence
+    const enableOffline = () => disableNetwork(db);
+    const enableOnline = () => enableNetwork(db);
+  });
+}
 

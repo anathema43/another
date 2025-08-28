@@ -16,31 +16,35 @@ export const CONTACT_INFO = {
 };
 
 export const BUSINESS_HOURS = {
-  weekdays: 'Monday - Friday: 9:00 AM - 6:00 PM (NPT)',
-  saturday: 'Saturday: 10:00 AM - 4:00 PM (NPT)',
+  weekdays: 'Monday - Friday: 9:00 AM - 6:00 PM (IST)',
+  saturday: 'Saturday: 10:00 AM - 4:00 PM (IST)',
   sunday: 'Sunday: Closed'
 };
 
-const SHIPPING_INFO = {
+export const SHIPPING_INFO = {
   freeShippingThreshold: 500,
   domesticDelivery: '3-7 business days',
   internationalDelivery: '7-14 business days',
   processingTime: '2-5 business days'
 };
 
-const RETURN_POLICY = {
+export const RETURN_POLICY = {
   returnWindow: 7, // days
-  refundMethods: ['Credit/Debit cards: 5-7 business days', 'UPI/Digital wallets: 2-3 business days', 'Cash on Delivery: Bank transfer within 7 days']
+  refundMethods: [
+    'Credit/Debit cards: 5-7 business days', 
+    'UPI/Digital wallets: 2-3 business days', 
+    'Cash on Delivery: Bank transfer within 7 days'
+  ]
 };
 
-const SOCIAL_MEDIA = {
+export const SOCIAL_MEDIA = {
   twitter: 'https://twitter.com/darjeelingsouls',
   facebook: 'https://facebook.com/darjeelingsouls',
   instagram: 'https://instagram.com/darjeelingsouls',
   pinterest: 'https://pinterest.com/darjeelingsouls'
 };
 
-const APP_CONFIG = {
+export const APP_CONFIG = {
   name: 'Darjeeling Souls',
   tagline: 'Authentic Darjeeling Hill Products',
   description: 'Handpicked, Organically Grown in the Darjeeling Hills',
@@ -48,7 +52,7 @@ const APP_CONFIG = {
   defaultLanguage: 'en'
 };
 
-const PAYMENT_METHODS = {
+export const PAYMENT_METHODS = {
   razorpay: {
     name: 'Razorpay',
     description: 'Cards, UPI, Net Banking, Wallets',
@@ -64,7 +68,7 @@ const PAYMENT_METHODS = {
   }
 };
 
-const ERROR_MESSAGES = {
+export const ERROR_MESSAGES = {
   network: 'Network error: Please check your internet connection',
   auth: 'Authentication failed: Please check your credentials',
   payment: 'Payment processing failed: Please try again',
@@ -72,7 +76,7 @@ const ERROR_MESSAGES = {
   validation: 'Please check your input and try again'
 };
 
-const SUCCESS_MESSAGES = {
+export const SUCCESS_MESSAGES = {
   orderPlaced: 'Order placed successfully!',
   productAdded: 'Product added to cart',
   profileUpdated: 'Profile updated successfully',

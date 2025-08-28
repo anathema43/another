@@ -267,8 +267,8 @@ class MarkdownDataLayer {
   async getAllRoadmapData() {
     try {
       const [completionContent, roadmapContent] = await Promise.all([
-        this.fetchMarkdownFile('COMPLETION_STATUS_ANALYSIS.md'),
-        this.fetchMarkdownFile('DEVELOPMENT_ROADMAP.md')
+        this.fetchMarkdownFile('docs/project_management/COMPLETION_STATUS_ANALYSIS.md'),
+        this.fetchMarkdownFile('docs/project_management/DEVELOPMENT_ROADMAP.md')
       ]);
 
       return {
