@@ -14,6 +14,8 @@ export default function Stories() {
   const [featuredStory, setFeaturedStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showStoryEditor, setShowStoryEditor] = useState(false);
+  const [editingStory, setEditingStory] = useState(null);
   const [sortBy, setSortBy] = useState('newest');
   
   const isAdmin = userProfile?.role === 'admin';
@@ -64,6 +66,44 @@ export default function Stories() {
     }
   };
 
+  const handleDeleteStory = async (storyId) => {
+    if (!window.confirm('Are you sure you want to delete this story?')) return;
+    
+    try {
+      if (db) {
+        await deleteDoc(doc(db, "stories", storyId));
+      }
+      setStories(stories.filter(s => s.id !== storyId));
+      if (featuredStory?.id === storyId) {
+        setFeaturedStory(null);
+      }
+    } catch (error) {
+      console.error('Error deleting story:', error);
+      alert('Error deleting story: ' + error.message);
+    }
+  };
+
+  const handleEditStory = (story) => {
+    setEditingStory(story);
+    setShowStoryEditor(true);
+  };
+
+  const handleAddStory = () => {
+    setEditingStory(null);
+    setShowStoryEditor(true);
+  };
+
+  const handleCloseEditor = () => {
+    setShowStoryEditor(false);
+    setEditingStory(null);
+  };
+
+  const handleSaveStory = () => {
+    setShowStoryEditor(false);
+    setEditingStory(null);
+    fetchStories(); // Refresh stories list
+  };
+
   const categories = [
     { id: 'all', label: 'All Stories' },
     { id: 'events', label: 'Events & Festivals' },
@@ -95,25 +135,6 @@ export default function Stories() {
         return new Date(b.publishedAt) - new Date(a.publishedAt);
     }
   });
-
-  const handleAddStory = () => {
-    window.location.href = '/#/admin';
-  };
-
-  const handleEditStory = (story) => {
-    window.location.href = `/#/admin/stories/edit/${story.id}`;
-  };
-
-  const handleDeleteStory = async (storyId) => {
-    if (window.confirm('Are you sure you want to delete this story?')) {
-      try {
-        await deleteDoc(doc(db, "stories", storyId));
-        fetchStories(); // Refresh the stories list
-      } catch (error) {
-        console.error('Error deleting story:', error);
-      }
-    }
-  };
 
   if (loading) {
     return <LoadingSpinner />;
@@ -274,10 +295,10 @@ export default function Stories() {
               </p>
               {isAdmin && (
                 <button
-                  onClick={() => window.location.href = '/#/admin'}
+                  onClick={handleAddStory}
                   className="bg-organic-primary text-white px-6 py-3 rounded-lg hover:opacity-90"
                 >
-                  Create Stories in Admin Panel
+                  Create First Story
                 </button>
               )}
             </div>
@@ -388,6 +409,15 @@ export default function Stories() {
           </div>
         </div>
       </section>
+      
+      {/* Story Editor Modal */}
+      {showStoryEditor && (
+        <StoryEditor
+          story={editingStory}
+          onClose={handleCloseEditor}
+          onSave={handleSaveStory}
+        />
+      )}
     </div>
   );
 }
