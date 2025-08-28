@@ -83,6 +83,11 @@ service cloud.firestore {
       allow write, create, delete: if isAdmin();
     }
     
+    // Wishlists are readable/writable by the user who owns them
+    match /wishlists/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
     // Admin-only collections with strict validation
     match /admin/{document=**} {
       allow read, write: if isAdmin();

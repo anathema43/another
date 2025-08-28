@@ -135,6 +135,7 @@ export const useWishlistStore = create(
     }),
     {
       name: "ramro-wishlist-storage",
+      partialize: (state) => ({ wishlist: state.wishlist }),
     }
   )
 );

@@ -56,7 +56,7 @@ export default function Login() {
       // Navigate after successful login
       const { userProfile } = useAuthStore.getState();
       const savedRedirectPath = getAndClearRedirectPath();
-      const redirectPath = determineRedirectPath(userProfile, savedRedirectPath);
+      const redirectPath = savedRedirectPath || '/';
       navigate(redirectPath, { replace: true });
       
     } catch (error) {
