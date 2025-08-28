@@ -3,13 +3,7 @@ import CustomizableChart from './CustomizableChart';
 
 const AnalyticsChart = ({ data, xKey, yKey, type = 'line', color = '#3B82F6', height = 300 }) => {
   // Transform props to match CustomizableChart expectations
-  const metrics = [
-    {
-      key: yKey,
-      label: yKey.charAt(0).toUpperCase() + yKey.slice(1),
-      color: color
-    }
-  ];
+  const metrics = [yKey];
 
   return (
     <CustomizableChart
