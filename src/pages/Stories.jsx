@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CalendarIcon, UserIcon, ClockIcon, ArrowRightIcon, PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { collection, getDocs, orderBy, query, limit, where, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, limit, where } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { useAuthStore } from "../store/authStore";
 import ResponsiveImage from "../components/ResponsiveImage";
 import LoadingSpinner from "../components/LoadingSpinner";
-import StoryEditor from "../components/StoryEditor";
 
 export default function Stories() {
   const { userProfile } = useAuthStore();
