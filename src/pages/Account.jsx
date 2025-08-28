@@ -1,15 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { useUserStore } from "../store/userStore";
 import { useOrderStore } from "../store/orderStore";
 import { useWishlistStore } from "../store/wishlistStore";
 import UserProfileEditor from "../components/UserProfileEditor";
+import AddressBook from "../components/AddressBook";
+import AddressFormModal from "../components/AddressFormModal";
 
 export default function AccountPage() {
   const { currentUser, userProfile, logout } = useAuthStore();
+  const { addresses } = useUserStore();
   const { userOrders } = useOrderStore();
   const { wishlist } = useWishlistStore();
   const [activeTab, setActiveTab] = React.useState('overview');
+  const [showAddressModal, setShowAddressModal] = React.useState(false);
+  const [editingAddress, setEditingAddress] = React.useState(null);
 
   if (!currentUser) {
     return (
@@ -47,6 +53,7 @@ export default function AccountPage() {
               {[
                 { id: 'overview', label: 'Overview' },
                 { id: 'profile', label: 'Edit Profile' },
+                { id: 'addresses', label: 'My Addresses' },
                 { id: 'orders', label: 'Orders' },
                 { id: 'wishlist', label: 'Wishlist' }
               ].map(tab => (
@@ -109,6 +116,10 @@ export default function AccountPage() {
                       <p className="text-2xl font-bold text-organic-highlight">{wishlist?.length || 0}</p>
                       <p className="text-sm text-organic-text opacity-75">Wishlist Items</p>
                     </div>
+                    <div className="text-center p-4 bg-organic-background rounded-lg">
+                      <p className="text-2xl font-bold text-organic-primary">{addresses?.length || 0}</p>
+                      <p className="text-sm text-organic-text opacity-75">Saved Addresses</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -116,6 +127,24 @@ export default function AccountPage() {
 
             {activeTab === 'profile' && (
               <UserProfileEditor />
+            )}
+
+            {activeTab === 'addresses' && (
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-semibold text-organic-text">My Addresses</h2>
+                  <button
+                    onClick={() => setShowAddressModal(true)}
+                    className="bg-organic-primary text-white px-4 py-2 rounded-lg hover:opacity-90 font-medium"
+                  >
+                    Add New Address
+                  </button>
+                </div>
+                <AddressBook 
+                  onAddNewAddress={() => setShowAddressModal(true)}
+                  showAddButton={false}
+                />
+              </div>
             )}
 
             {activeTab === 'orders' && (
@@ -217,7 +246,37 @@ export default function AccountPage() {
               <h3 className="text-lg font-semibold text-organic-text mb-2">Continue Shopping</h3>
               <p className="text-organic-text opacity-75 text-sm">Discover more products</p>
             </Link>
+            
+            <Link 
+              to="/account" 
+              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all text-center group"
+              onClick={() => setActiveTab('addresses')}
+            >
+              <div className="w-12 h-12 bg-organic-highlight rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-organic-text mb-2">My Addresses</h3>
+              <p className="text-organic-text opacity-75 text-sm">Manage delivery addresses</p>
+            </Link>
           </div>
+        )}
+
+        {/* Address Form Modal */}
+        {showAddressModal && (
+          <AddressFormModal
+            address={editingAddress}
+            onClose={() => {
+              setShowAddressModal(false);
+              setEditingAddress(null);
+            }}
+            onSave={() => {
+              setShowAddressModal(false);
+              setEditingAddress(null);
+            }}
+          />
         )}
       </div>
     </div>

@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useCartStore } from "../store/cartStore";
 import { useOrderStore } from "../store/orderStore";
 import { useAuthStore } from "../store/authStore";
+import { useUserStore } from "../store/userStore";
 import RazorpayCheckout from "../components/RazorpayCheckout";
+import AddressBook from "../components/AddressBook";
+import AddressFormModal from "../components/AddressFormModal";
 import formatCurrency from "../utils/formatCurrency";
 import LoadingSpinner from "../components/LoadingSpinner";
 import emailService from "../services/emailService";
@@ -13,29 +16,29 @@ export default function Checkout() {
   const { cart, getTotalPrice, getSubtotal, getTax, getShipping, getGrandTotal, clearCart } = useCartStore();
   const { createOrder } = useOrderStore();
   const { currentUser } = useAuthStore();
+  const { addresses, getDefaultAddress } = useUserStore();
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [paymentStep, setPaymentStep] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [showAddressModal, setShowAddressModal] = useState(false);
   const [formData, setFormData] = useState({
     // Shipping Information
-    firstName: "",
-    lastName: "",
-    email: currentUser?.email || "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "Nepal",
-    
-    // Payment Information
     paymentMethod: "card",
     paymentMethod: "razorpay",
     
     // Order Notes
     orderNotes: ""
   });
+
+  // Set default address on component mount
+  React.useEffect(() => {
+    const defaultAddress = getDefaultAddress();
+    if (defaultAddress) {
+      setSelectedAddress(defaultAddress);
+    }
+  }, [addresses, getDefaultAddress]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,14 +48,18 @@ export default function Checkout() {
     }));
   };
 
+  const handleAddressSelect = (address) => {
+    setSelectedAddress(address);
+  };
+
+  const handleAddNewAddress = () => {
+    setShowAddressModal(true);
+  };
+
   const validateForm = () => {
-    const required = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'zipCode'];
-    
-    for (let field of required) {
-      if (!formData[field].trim()) {
-        setError(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
-        return false;
-      }
+    if (!selectedAddress) {
+      setError("Please select a delivery address");
+      return false;
     }
 
     return true;
@@ -74,16 +81,13 @@ export default function Checkout() {
       const orderData = {
         items: cart,
         shipping: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          zipCode: formData.zipCode,
-          country: formData.country
+          firstName: selectedAddress.recipientName.split(' ')[0],
+          lastName: selectedAddress.recipientName.split(' ').slice(1).join(' '),
+          name: selectedAddress.recipientName,
+          email: currentUser?.email || "",
+          phone: selectedAddress.recipientPhone,
+          address: selectedAddress.fullAddress,
+          addressLabel: selectedAddress.label === 'Other' ? selectedAddress.customLabel : selectedAddress.label
         },
         payment: {
           method: formData.paymentMethod,
@@ -208,15 +212,13 @@ export default function Checkout() {
                 orderData={{
                   items: cart,
                   shipping: {
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    email: formData.email,
-                    phone: formData.phone,
-                    address: formData.address,
-                    city: formData.city,
-                    state: formData.state,
-                    zipCode: formData.zipCode,
-                    country: formData.country
+                    firstName: selectedAddress?.recipientName.split(' ')[0] || '',
+                    lastName: selectedAddress?.recipientName.split(' ').slice(1).join(' ') || '',
+                    name: selectedAddress?.recipientName || '',
+                    email: currentUser?.email || "",
+                    phone: selectedAddress?.recipientPhone || '',
+                    address: selectedAddress?.fullAddress || '',
+                    addressLabel: selectedAddress?.label === 'Other' ? selectedAddress?.customLabel : selectedAddress?.label
                   },
                   subtotal: getSubtotal(),
                   tax: getTax(),
@@ -236,102 +238,29 @@ export default function Checkout() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Shipping Information */}
               <div>
-                <h2 className="text-xl font-bold text-organic-text mb-4">Shipping Information</h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-organic-text font-medium mb-2">First Name *</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-organic-text font-medium mb-2">Last Name *</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent"
-                      required
-                    />
-                  </div>
-                </div>
+                <h2 className="text-xl font-bold text-organic-text mb-4">Delivery Address</h2>
+                <AddressBook 
+                  onAddressSelect={handleAddressSelect}
+                  selectedAddressId={selectedAddress?.id}
+                  onAddNewAddress={handleAddNewAddress}
+                  selectionMode={true}
+                />
                 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-organic-text font-medium mb-2">Email *</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent"
-                      required
-                    />
+                {selectedAddress && (
+                  <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="font-medium text-green-800">Delivery Address Selected</span>
+                    </div>
+                    <div className="text-sm text-green-700">
+                      <p><strong>{selectedAddress.recipientName}</strong></p>
+                      <p>{selectedAddress.recipientPhone}</p>
+                      <p>{selectedAddress.fullAddress}</p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-organic-text font-medium mb-2">Phone *</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-organic-text font-medium mb-2">Address *</label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent"
-                    required
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-organic-text font-medium mb-2">City *</label>
-                    <input
-                      type="text"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-organic-text font-medium mb-2">State/Province</label>
-                    <input
-                      type="text"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-organic-text font-medium mb-2">ZIP Code *</label>
-                    <input
-                      type="text"
-                      name="zipCode"
-                      value={formData.zipCode}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent"
-                      required
-                    />
-                  </div>
+                )}
                 </div>
               </div>
 
@@ -439,6 +368,14 @@ export default function Checkout() {
             </div>
           </div>
         </div>
+        )}
+
+        {/* Address Form Modal */}
+        {showAddressModal && (
+          <AddressFormModal
+            onClose={() => setShowAddressModal(false)}
+            onSave={() => setShowAddressModal(false)}
+          />
         )}
       </div>
     </div>

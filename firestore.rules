@@ -26,10 +26,25 @@ service cloud.firestore {
         request.resource.data.role in ['customer', 'admin'];
     }
     
+    // Helper function to validate address data
+    function isValidAddressData(address) {
+      return address.keys().hasAll(['id', 'label', 'recipientName', 'recipientPhone', 'fullAddress']) &&
+        address.id is string &&
+        address.label in ['Home', 'Work', 'Other'] &&
+        address.recipientName is string &&
+        address.recipientPhone is string &&
+        address.fullAddress is string &&
+        (address.label != 'Other' || address.customLabel is string);
+    }
+    
     // Users can read and write their own user document
     match /users/{userId} {
       allow read: if isOwner(userId);
-      allow write: if isOwner(userId) && isValidUserData();
+      allow write: if isOwner(userId) && isValidUserData() &&
+        (!('addresses' in request.resource.data) || 
+         request.resource.data.addresses is list &&
+         request.resource.data.addresses.size() <= 10 &&
+         request.resource.data.addresses.hasAll([isValidAddressData]));
       allow create: if isAuthenticated() && 
         request.auth.uid == userId && 
         isValidUserData();
