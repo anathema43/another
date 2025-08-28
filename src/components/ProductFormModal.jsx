@@ -262,7 +262,6 @@ export default function ProductFormModal({ product, artisans, onClose, onSave })
               onImageUploaded={handleImageUpload}
               onError={(error) => setError(`Image upload: ${error}`)}
               currentImage={formData.image}
-             folder="darjeelingsouls/products/product_images"
             />
             {formData.image && (
               <div className="mt-2 text-sm text-green-600">

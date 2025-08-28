@@ -26,10 +26,8 @@ class CloudinaryService {
     formData.append('file', file);
     formData.append('upload_preset', cloudinaryConfig.uploadPreset);
     
-    // Add optional parameters
-    if (options.folder) {
-      formData.append('folder', options.folder);
-    }
+    // Don't add folder parameter for unsigned uploads with preset that has asset folder
+    // The preset already defines the base folder as 'darjeelingsouls/products'
     
     if (options.tags) {
       formData.append('tags', Array.isArray(options.tags) ? options.tags.join(',') : options.tags);
