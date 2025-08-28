@@ -7,6 +7,7 @@ import formatCurrency from '../utils/formatCurrency';
 
 export default function RazorpayCheckout({ orderData, onSuccess, onError }) {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [serviceDown, setServiceDown] = useState(false);
   const { clearCart } = useCartStore();
   const { createOrder } = useOrderStore();
 
@@ -38,8 +39,44 @@ export default function RazorpayCheckout({ orderData, onSuccess, onError }) {
     );
   }
 
+  // Show service down message
+  if (serviceDown) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-red-800 mb-2">
+          🚫 Payment Service Temporarily Down
+        </h3>
+        <p className="text-red-700 mb-4">
+          We're experiencing technical difficulties with our payment processor. Please try again in a few minutes.
+        </p>
+        <div className="text-sm text-red-600 mb-4">
+          <p>• Our team has been notified and is working to resolve this issue</p>
+          <p>• Your cart items are saved and will be available when you return</p>
+          <p>• You can also contact us directly to place your order</p>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => {
+              setServiceDown(false);
+              setIsProcessing(false);
+            }}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+          >
+            Try Again
+          </button>
+          <button
+            onClick={() => window.location.href = '/#/contact'}
+            className="border border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
+          >
+            Contact Support
+          </button>
+        </div>
+      </div>
+    );
+  }
   const handlePayment = async () => {
     setIsProcessing(true);
+    setServiceDown(false);
 
     try {
       await razorpayService.processPayment(
@@ -68,11 +105,29 @@ export default function RazorpayCheckout({ orderData, onSuccess, onError }) {
           }
         },
         (errorMessage) => {
+          // Check if error indicates service is down
+          if (errorMessage.includes('network') || 
+              errorMessage.includes('timeout') || 
+              errorMessage.includes('service unavailable') ||
+              errorMessage.includes('server error') ||
+              errorMessage.includes('initialization failed')) {
+            setServiceDown(true);
+          } else {
+            onError(errorMessage);
+          }
           onError(errorMessage);
           setIsProcessing(false);
         }
       );
     } catch (error) {
+      // Handle initialization errors as service down
+      if (error.message.includes('Failed to load') || 
+          error.message.includes('network') ||
+          error.message.includes('initialization failed')) {
+        setServiceDown(true);
+      } else {
+        onError('Payment initialization failed: ' + error.message);
+      }
       onError('Payment initialization failed: ' + error.message);
       setIsProcessing(false);
     }

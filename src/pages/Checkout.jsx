@@ -149,6 +149,18 @@ export default function Checkout() {
   };
 
   const handlePaymentError = (errorMessage) => {
+    // Enhanced error handling for better user experience
+    if (errorMessage.includes('service unavailable') || 
+        errorMessage.includes('temporarily unavailable') ||
+        errorMessage.includes('service down')) {
+      setError('Payment service is temporarily down. Please try again in a few minutes or contact support.');
+    } else if (errorMessage.includes('network')) {
+      setError('Network connection issue. Please check your internet and try again.');
+    } else if (errorMessage.includes('cancelled')) {
+      setError('Payment was cancelled. You can try again or contact support if you need help.');
+    } else {
+      setError(errorMessage);
+    }
     setError(errorMessage);
     setPaymentStep(false);
     setLoading(false);
