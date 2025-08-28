@@ -168,7 +168,7 @@ export default function Admin() {
   });
 
   // Get unique categories
-  const categories = [...new Set(displayProducts.map(p => p.category))];
+  const productCategories = [...new Set(displayProducts.map(p => p.category))];
 
   // Calculate dashboard stats
   const dashboardStats = {
@@ -485,7 +485,7 @@ export default function Admin() {
                         className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-organic-primary"
                       >
                         <option value="all">All Categories</option>
-                        {categories.map(category => (
+                        {productCategories.map(category => (
                           <option key={category} value={category} className="capitalize">
                             {category}
                           </option>
