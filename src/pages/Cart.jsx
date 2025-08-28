@@ -6,7 +6,7 @@ import AddToCartButton from "../components/AddToCartButton";
 import { TrashIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 
 export default function Cart() {
-  const { cart, removeFromCart, clearCart, getTotalPrice } = useCartStore();
+  const { cart, removeFromCart, clearCart, getTotalPrice, getSubtotal, getTax, getShipping, getGrandTotal } = useCartStore();
   const navigate = useNavigate();
 
   if (cart.length === 0) {
@@ -97,8 +97,22 @@ export default function Cart() {
               <p className="text-sm text-organic-text opacity-75">
                 Total Items: {cart.reduce((sum, item) => sum + item.quantity, 0)}
               </p>
+              <div className="space-y-1 text-sm text-organic-text opacity-75 mb-2">
+                <div className="flex justify-between">
+                  <span>Subtotal:</span>
+                  <span>{formatCurrency(getSubtotal())}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Tax:</span>
+                  <span>{formatCurrency(getTax())}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping:</span>
+                  <span>{getShipping() === 0 ? 'Free' : formatCurrency(getShipping())}</span>
+                </div>
+              </div>
               <p className="text-2xl font-bold text-organic-text">
-                Total: {formatCurrency(getTotalPrice() + getTax() + getShipping())}
+                Total: {formatCurrency(getGrandTotal())}
               </p>
             </div>
             <div className="flex gap-3">
