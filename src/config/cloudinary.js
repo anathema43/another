@@ -3,7 +3,7 @@ const cloudinaryConfig = {
   cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
   apiKey: import.meta.env.VITE_CLOUDINARY_API_KEY,
   apiSecret: import.meta.env.VITE_CLOUDINARY_API_SECRET, // Only for server-side
-  uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'ramro_products'
+  uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'Darjeeling Souls Products'
 };
 
 // Check if Cloudinary is configured
