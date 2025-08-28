@@ -14,6 +14,8 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:run:critical": "cypress run --spec \"cypress/e2e/01-authentication.cy.js,cypress/e2e/02-product-browsing.cy.js,cypress/e2e/03-checkout.cy.js\"",
+    "cy:run:persistence": "cypress run --spec \"cypress/e2e/cart-persistence.cy.js,cypress/e2e/wishlist-persistence.cy.js,cypress/e2e/authentication-routing.cy.js\"",
+    "test:persistence": "vitest run src/components/__tests__/CartPersistence.test.jsx src/components/__tests__/WishlistFunctionality.test.jsx src/components/__tests__/AuthenticationRouting.test.jsx",
     "update-logo": "node scripts/update-logo.js"
   },
   "dependencies": {
