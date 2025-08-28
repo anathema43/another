@@ -50,7 +50,7 @@ export default function ProductFormModal({ product, artisans, onClose, onSave })
     if (imageData) {
       setFormData(prev => ({
         ...prev,
-        image: imageData.optimizedUrl || imageData.secureUrl
+        image: imageData.optimizedUrl || imageData.secureUrl || imageData.url
       }));
     }
   };
@@ -260,9 +260,15 @@ export default function ProductFormModal({ product, artisans, onClose, onSave })
             </label>
             <ImageUpload
               onImageUploaded={handleImageUpload}
+              onError={(error) => setError(`Image upload: ${error}`)}
               currentImage={formData.image}
               folder="ramro/products"
             />
+            {formData.image && (
+              <div className="mt-2 text-sm text-green-600">
+                ✅ Image selected: {formData.image.includes('blob:') ? 'Local file' : 'Uploaded successfully'}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-4 pt-4">

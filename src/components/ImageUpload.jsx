@@ -49,8 +49,19 @@ export default function ImageUpload({
     reader.onload = (e) => setPreview(e.target.result);
     reader.readAsDataURL(file);
 
-    // Upload to Cloudinary
-    uploadToCloudinary(file);
+    // Upload to Cloudinary or use direct URL
+    if (cloudinaryService && typeof cloudinaryService.uploadImage === 'function') {
+      uploadToCloudinary(file);
+    } else {
+      // Fallback: use the preview URL directly
+      if (onImageUploaded) {
+        onImageUploaded({
+          publicId: `local_${Date.now()}`,
+          secureUrl: URL.createObjectURL(file),
+          optimizedUrl: URL.createObjectURL(file)
+        });
+      }
+    }
   };
 
   const uploadToCloudinary = async (file) => {
@@ -58,6 +69,11 @@ export default function ImageUpload({
     setProgress(0);
 
     try {
+      // Check if Cloudinary service is available
+      if (!cloudinaryService || typeof cloudinaryService.uploadImage !== 'function') {
+        throw new Error('Cloudinary service not configured. Using local upload instead.');
+      }
+
       const result = await cloudinaryService.uploadImage(
         file,
         (progressPercent) => setProgress(progressPercent),
@@ -83,10 +99,22 @@ export default function ImageUpload({
       setPreview(result.secureUrl);
     } catch (error) {
       console.error('Upload error:', error);
-      if (onError) {
-        onError(error.message);
+      
+      // Fallback to local file URL if Cloudinary fails
+      const localUrl = URL.createObjectURL(file);
+      if (onImageUploaded) {
+        onImageUploaded({
+          publicId: `local_${Date.now()}`,
+          secureUrl: localUrl,
+          optimizedUrl: localUrl
+        });
       }
-      setPreview(currentImage); // Reset to original
+      
+      setPreview(localUrl);
+      
+      if (onError) {
+        onError(`Cloudinary upload failed, using local file: ${error.message}`);
+      }
     } finally {
       setUploading(false);
       setProgress(0);
