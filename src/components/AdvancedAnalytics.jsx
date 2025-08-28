@@ -7,7 +7,7 @@ import {
   UsersIcon, 
   ShoppingCartIcon,
   TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingDownIcon,
   CalendarIcon,
   DocumentChartBarIcon,
   ArrowDownTrayIcon,
@@ -452,7 +452,7 @@ export default function AdvancedAnalytics() {
 
   const formatGrowth = (growth) => {
     const isPositive = growth >= 0;
-    const Icon = isPositive ? TrendingUpIcon : TrendingDownIcon;
+    const Icon = isPositive ? TrendingUpIcon : ArrowTrendingDownIcon;
     const color = isPositive ? 'text-green-600' : 'text-red-600';
     
     return (
