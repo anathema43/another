@@ -76,6 +76,14 @@ class CloudinaryService {
             // Also log the direct clickable URL
             console.log('🖼️ Direct image URL (click to view):', response.secure_url);
             
+            console.log('✅ Upload successful! View your image at:', {
+              publicId: response.public_id,
+              secureUrl: response.secure_url
+            });
+            
+            // Also log the direct clickable URL
+            console.log('🖼️ Direct image URL (click to view):', response.secure_url);
+            
             resolve({
               publicId: response.public_id,
               secureUrl: response.secure_url,
