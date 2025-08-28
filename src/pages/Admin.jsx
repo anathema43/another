@@ -288,12 +288,6 @@ export default function Admin() {
                       <PlusIcon className="w-4 h-4" />
                       Add Single Product
                     </button>
-                    <button
-                      onClick={() => {/* Scroll to bulk upload */}}
-                      className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                    >
-                      📊 Bulk Upload
-                    </button>
                   </div>
                 </div>
 
