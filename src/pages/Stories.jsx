@@ -14,8 +14,6 @@ export default function Stories() {
   const [featuredStory, setFeaturedStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [showStoryEditor, setShowStoryEditor] = useState(false);
-  const [editingStory, setEditingStory] = useState(null);
   const [sortBy, setSortBy] = useState('newest');
   
   const isAdmin = userProfile?.role === 'admin';
@@ -64,44 +62,6 @@ export default function Stories() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDeleteStory = async (storyId) => {
-    if (!window.confirm('Are you sure you want to delete this story?')) return;
-    
-    try {
-      if (db) {
-        await deleteDoc(doc(db, "stories", storyId));
-      }
-      setStories(stories.filter(s => s.id !== storyId));
-      if (featuredStory?.id === storyId) {
-        setFeaturedStory(null);
-      }
-    } catch (error) {
-      console.error('Error deleting story:', error);
-      alert('Error deleting story: ' + error.message);
-    }
-  };
-
-  const handleEditStory = (story) => {
-    setEditingStory(story);
-    setShowStoryEditor(true);
-  };
-
-  const handleAddStory = () => {
-    setEditingStory(null);
-    setShowStoryEditor(true);
-  };
-
-  const handleCloseEditor = () => {
-    setShowStoryEditor(false);
-    setEditingStory(null);
-  };
-
-  const handleSaveStory = () => {
-    setShowStoryEditor(false);
-    setEditingStory(null);
-    fetchStories(); // Refresh stories list
   };
 
   const categories = [
@@ -158,11 +118,11 @@ export default function Stories() {
             {/* Admin Add Story Button */}
             {isAdmin && (
               <button
-                onClick={handleAddStory}
+                onClick={() => window.location.href = '/#/admin'}
                 className="inline-flex items-center gap-2 bg-white text-organic-text font-semibold px-6 py-3 rounded-lg hover:bg-organic-background transition-all"
               >
                 <PlusIcon className="w-5 h-5" />
-                Create New Story
+                Manage Stories
               </button>
             )}
           </div>
@@ -295,10 +255,10 @@ export default function Stories() {
               </p>
               {isAdmin && (
                 <button
-                  onClick={handleAddStory}
+                  onClick={() => window.location.href = '/#/admin'}
                   className="bg-organic-primary text-white px-6 py-3 rounded-lg hover:opacity-90"
                 >
-                  Create First Story
+                  Create Stories in Admin Panel
                 </button>
               )}
             </div>
@@ -365,20 +325,13 @@ export default function Stories() {
                   <div className="flex flex-wrap gap-2 mb-4">
                     {story.tags?.slice(0, 2).map(tag => (
                       <span key={tag} className="bg-organic-background text-organic-text px-2 py-1 rounded-full text-xs">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                  <Link 
-                    to={`/stories/${story.id}`}
-                    className="inline-flex items-center gap-2 text-organic-primary hover:text-organic-text font-medium"
-                  >
-                    Read Story
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              </article>
-              ))}
+              <Link
+                to="/admin"
+                className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
+                title="Manage in Admin Panel"
+              >
+                <PencilIcon className="w-4 h-4" />
+              </Link>
             </div>
           )}
         </div>
@@ -409,15 +362,6 @@ export default function Stories() {
           </div>
         </div>
       </section>
-      
-      {/* Story Editor Modal */}
-      {showStoryEditor && (
-        <StoryEditor
-          story={editingStory}
-          onClose={handleCloseEditor}
-          onSave={handleSaveStory}
-        />
-      )}
     </div>
   );
 }

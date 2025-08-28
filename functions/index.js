@@ -172,6 +172,15 @@ const generateOrderConfirmationHTML = (orderData) => {
             `).join('') || '<p>No items found</p>'}
             
             <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #D9734E;">
+            <div class="order-details">
+              <h4>Shipping Address:</h4>
+              <p>
+                ${orderData.shipping?.firstName || ''} ${orderData.shipping?.lastName || ''}<br>
+                ${orderData.shipping?.address || ''}<br>
+                ${orderData.shipping?.city || ''}, ${orderData.shipping?.state || ''} ${orderData.shipping?.zipCode || ''}
+              </p>
+            </div>
+            
               <p class="total">Total: ₹${orderData.total || 0}</p>
             </div>
           </div>

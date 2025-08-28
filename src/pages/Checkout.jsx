@@ -31,10 +31,7 @@ export default function Checkout() {
     
     // Payment Information
     paymentMethod: "card",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    nameOnCard: "",
+    paymentMethod: "razorpay",
     
     // Order Notes
     orderNotes: ""
@@ -58,16 +55,6 @@ export default function Checkout() {
       }
     }
 
-    if (formData.paymentMethod === 'card') {
-      const cardRequired = ['cardNumber', 'expiryDate', 'cvv', 'nameOnCard'];
-      for (let field of cardRequired) {
-        if (!formData[field].trim()) {
-          setError(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
-          return false;
-        }
-      }
-    }
-
     return true;
   };
 
@@ -86,7 +73,7 @@ export default function Checkout() {
     try {
       const orderData = {
         items: cart,
-        shippingInfo: {
+        shipping: {
           firstName: formData.firstName,
           lastName: formData.lastName,
           name: `${formData.firstName} ${formData.lastName}`,
@@ -110,11 +97,11 @@ export default function Checkout() {
         paymentStatus: "pending"
       };
 
-      if (formData.paymentMethod === 'card') {
-        // Proceed to Stripe payment
+      if (formData.paymentMethod === 'razorpay') {
+        // Proceed to Razorpay payment
         setPaymentStep(true);
       } else {
-        // Handle other payment methods (COD, etc.)
+        // This shouldn't happen since we only have Razorpay now
         const order = await createOrder(orderData);
         
         // Send confirmation email
@@ -208,7 +195,7 @@ export default function Checkout() {
               <RazorpayCheckout
                 orderData={{
                   items: cart,
-                  shippingInfo: {
+                  shipping: {
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     email: formData.email,
@@ -346,24 +333,13 @@ export default function Checkout() {
                     <label className="flex items-center">
                       <input
                         type="radio"
-                        name="paymentMethod"
-                        value="card"
-                        checked={formData.paymentMethod === 'card'}
+                        name="paymentMethod" 
+                        value="razorpay"
+                        checked={formData.paymentMethod === 'razorpay'}
                         onChange={handleInputChange}
                         className="mr-2"
                       />
                       Razorpay (Cards, UPI, Net Banking, Wallets)
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="cod"
-                        checked={formData.paymentMethod === 'cod'}
-                        onChange={handleInputChange}
-                        className="mr-2"
-                      />
-                      Cash on Delivery
                     </label>
                   </div>
                 </div>
@@ -393,7 +369,7 @@ export default function Checkout() {
                 disabled={loading}
                 className="w-full bg-organic-primary text-white font-bold py-4 px-6 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "Processing..." : `${formData.paymentMethod === 'card' ? 'Proceed to Payment' : 'Place Order'} - ${formatCurrency(getGrandTotal())}`}
+                {loading ? "Processing..." : `Proceed to Payment - ${formatCurrency(getGrandTotal())}`}
               </button>
             </form>
           </div>

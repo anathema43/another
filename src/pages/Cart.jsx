@@ -6,7 +6,7 @@ import AddToCartButton from "../components/AddToCartButton";
 import { TrashIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 
 export default function Cart() {
-  const { cart, removeFromCart, clearCart, getTotalPrice, getSubtotal, getTax, getShipping, getGrandTotal } = useCartStore();
+  const { cart, removeFromCart, clearCart, getTotalItems, getSubtotal, getTax, getShipping, getGrandTotal } = useCartStore();
   const navigate = useNavigate();
 
   if (cart.length === 0) {

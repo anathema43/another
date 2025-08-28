@@ -23,7 +23,7 @@ class EmailService {
         template: EMAIL_TEMPLATES.ORDER_CONFIRMATION,
         to: orderData.userEmail,
         data: {
-          customerName: orderData.shipping.firstName,
+          customerName: orderData.shipping?.firstName || 'Customer',
           orderNumber: orderData.orderNumber,
           orderDate: new Date(orderData.createdAt).toLocaleDateString(),
           items: orderData.items.map(item => ({
@@ -34,7 +34,7 @@ class EmailService {
           })),
           subtotal: orderData.subtotal,
           tax: orderData.tax,
-          shipping: orderData.shipping,
+          shipping: orderData.shippingCost,
           total: orderData.total,
           shippingAddress: orderData.shipping
         }
@@ -76,7 +76,7 @@ class EmailService {
         to: orderData.userEmail,
         subject,
         data: {
-          customerName: orderData.shipping?.firstName || 'Customer',
+          customerName: orderData.shipping?.firstName || orderData.userEmail || 'Customer',
           orderNumber: orderData.orderNumber,
           status: newStatus,
           trackingNumber: orderData.trackingNumber,
