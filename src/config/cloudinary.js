@@ -1,7 +1,7 @@
 // Cloudinary configuration for professional image management
 const cloudinaryConfig = {
   cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-  uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'darjeeling_souls_products'
+  uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'Darjeeling_Souls_Products'
 };
 
 // Check if Cloudinary is configured
