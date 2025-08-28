@@ -150,19 +150,19 @@ export default function AdvancedAnalytics() {
     const conversionRate = totalSessions > 0 ? (currentOrders.length / totalSessions) * 100 : 0;
 
     // Calculate customer segments
-    const customerSegments = this.calculateCustomerSegments(currentOrders);
+    const customerSegments = calculateCustomerSegments(currentOrders);
     
     // Calculate product performance
-    const productPerformance = this.calculateProductPerformance(currentOrders, products);
+    const productPerformance = calculateProductPerformance(currentOrders, products);
     
     // Calculate marketing metrics
-    const marketingMetrics = this.calculateMarketingMetrics(currentOrders);
+    const marketingMetrics = calculateMarketingMetrics(currentOrders);
     
     // Calculate cohort analysis
-    const cohortAnalysis = this.calculateCohortAnalysis(orders);
+    const cohortAnalysis = calculateCohortAnalysis(orders);
     
     // Calculate seasonal trends
-    const seasonalTrends = this.calculateSeasonalTrends(orders);
+    const seasonalTrends = calculateSeasonalTrends(orders);
 
     setAnalytics({
       revenue: { 
@@ -198,6 +198,7 @@ export default function AdvancedAnalytics() {
     });
   };
 
+  // Helper functions for analytics calculations
   const calculateCustomerSegments = (orders) => {
     const customerData = {};
     
