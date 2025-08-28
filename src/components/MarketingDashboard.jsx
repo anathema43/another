@@ -8,7 +8,6 @@ import {
   CurrencyDollarIcon
 } from '@heroicons/react/24/outline';
 import formatCurrency from '../utils/formatCurrency';
-import CustomizableChart from './CustomizableChart';
 
 export default function MarketingDashboard({ marketingMetrics, timeRange, orders }) {
   const [selectedChannel, setSelectedChannel] = useState('all');

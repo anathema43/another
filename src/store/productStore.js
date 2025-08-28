@@ -93,6 +93,11 @@ export const useProductStore = create((set, get) => ({
   },
 
   getProductById: async (id) => {
+    if (!db) {
+      console.warn('Firebase not configured, using demo mode');
+      return null;
+    }
+    
     try {
       const docRef = doc(db, "products", id);
       const docSnap = await getDoc(docRef);
@@ -141,6 +146,12 @@ export const useProductStore = create((set, get) => ({
     return filtered;
   },
   addProduct: async (newProduct) => {
+    if (!db) {
+      console.warn('Firebase not configured, using demo mode');
+      set({ error: 'Firebase not configured' });
+      throw new Error('Firebase not configured');
+    }
+    
     set({ error: null });
     try {
       const productData = {
@@ -154,12 +165,20 @@ export const useProductStore = create((set, get) => ({
       
       const docRef = await addDoc(collection(db, "products"), productData);
       set({ products: [...get().products, { ...newProduct, id: docRef.id }] });
+      return docRef.id;
     } catch (error) {
       set({ error: error.message });
+      throw error;
     }
   },
 
   updateProduct: async (id, updatedFields) => {
+    if (!db) {
+      console.warn('Firebase not configured, using demo mode');
+      set({ error: 'Firebase not configured' });
+      throw new Error('Firebase not configured');
+    }
+    
     set({ error: null });
     try {
       const ref = doc(db, "products", id);
@@ -174,10 +193,17 @@ export const useProductStore = create((set, get) => ({
       });
     } catch (error) {
       set({ error: error.message });
+      throw error;
     }
   },
 
   deleteProduct: async (id) => {
+    if (!db) {
+      console.warn('Firebase not configured, using demo mode');
+      set({ error: 'Firebase not configured' });
+      throw new Error('Firebase not configured');
+    }
+    
     set({ error: null });
     try {
       await deleteDoc(doc(db, "products", id));
@@ -186,6 +212,7 @@ export const useProductStore = create((set, get) => ({
       });
     } catch (error) {
       set({ error: error.message });
+      throw error;
     }
   },
 

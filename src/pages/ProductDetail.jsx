@@ -2,7 +2,6 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import ResponsiveImage from "../components/ResponsiveImage";
 import { useProductStore } from "../store/productStore";
-import { useInventoryStore } from "../store/inventoryStore";
 import ReviewStars from "../components/ReviewStars";
 import WishlistButton from "../components/WishlistButton";
 import AddToCartButton from "../components/AddToCartButton";
@@ -15,7 +14,6 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 export default function ProductDetail() {
   const { id } = useParams();
   const { products, getProductById } = useProductStore();
-  const { trackProduct, untrackProduct } = useInventoryStore();
   const [product, setProduct] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [showReviewForm, setShowReviewForm] = React.useState(false);
@@ -33,11 +31,6 @@ export default function ProductDetail() {
         }
         
         setProduct(foundProduct);
-        
-        // Start tracking inventory for this product
-        if (foundProduct) {
-          trackProduct(id);
-        }
       } catch (error) {
         console.error('Error fetching product:', error);
       } finally {
@@ -46,12 +39,7 @@ export default function ProductDetail() {
     };
 
     fetchProduct();
-
-    // Cleanup: stop tracking when component unmounts
-    return () => {
-      untrackProduct(id);
-    };
-  }, [id, products, getProductById, trackProduct, untrackProduct]);
+  }, [id, products, getProductById]);
 
   if (loading) {
     return (

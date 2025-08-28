@@ -29,7 +29,7 @@ import {
 
 export default function Admin() {
   const { currentUser, userProfile } = useAuthStore();
-  const { products, orders, artisans, fetchProducts, fetchOrders, fetchArtisans, updateProduct, deleteProduct, updateOrderStatus } = useProductStore();
+  const { products, fetchProducts, updateProduct, deleteProduct } = useProductStore();
   const { orders: orderStoreOrders, fetchOrders: fetchOrdersFromStore, updateOrderStatus: updateOrderStatusInStore } = useOrderStore();
   const { artisans: artisanStoreArtisans, fetchArtisans: fetchArtisansFromStore, deleteArtisan } = useArtisanStore();
   

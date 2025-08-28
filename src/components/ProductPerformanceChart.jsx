@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChartBarIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline';
 import formatCurrency from '../utils/formatCurrency';
-import CustomizableChart from './CustomizableChart';
 
 export default function ProductPerformanceChart({ products, orders, timeRange }) {
   const [performanceData, setPerformanceData] = useState([]);

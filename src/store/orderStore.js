@@ -21,6 +21,12 @@ export const useOrderStore = create((set, get) => ({
 
   // Fetch all orders (admin only)
   fetchOrders: async (userId = null) => {
+    if (!db) {
+      console.warn('Firestore not available - cannot load orders');
+      set({ orders: [], userOrders: [], loading: false, error: 'Firestore not configured' });
+      return [];
+    }
+    
     set({ loading: true, error: null });
     try {
       let q;
@@ -45,8 +51,10 @@ export const useOrderStore = create((set, get) => ({
       } else {
         set({ orders, loading: false });
       }
+      return orders;
     } catch (error) {
       set({ error: error.message, loading: false });
+      throw error;
     }
   },
 
@@ -60,6 +68,11 @@ export const useOrderStore = create((set, get) => ({
 
   // Get single order by ID
   getOrderById: async (orderId) => {
+    if (!db) {
+      console.warn('Firebase not configured, using demo mode');
+      return null;
+    }
+    
     try {
       const docRef = doc(db, "orders", orderId);
       const docSnap = await getDoc(docRef);
@@ -75,6 +88,12 @@ export const useOrderStore = create((set, get) => ({
     }
   },
   addOrder: async (order) => {
+    if (!db) {
+      console.warn('Firebase not configured, using demo mode');
+      set({ error: 'Firebase not configured' });
+      throw new Error('Firebase not configured');
+    }
+    
     set({ error: null });
     try {
       const orderData = {
@@ -120,6 +139,12 @@ export const useOrderStore = create((set, get) => ({
   },
 
   updateOrderStatus: async (id, status, additionalData = {}) => {
+    if (!db) {
+      console.warn('Firebase not configured, using demo mode');
+      set({ error: 'Firebase not configured' });
+      throw new Error('Firebase not configured');
+    }
+    
     set({ error: null });
     try {
       const updateData = {
@@ -154,6 +179,7 @@ export const useOrderStore = create((set, get) => ({
       });
     } catch (error) {
       set({ error: error.message });
+      throw error;
     }
   },
 

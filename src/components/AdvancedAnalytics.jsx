@@ -19,7 +19,6 @@ import {
 import formatCurrency from '../utils/formatCurrency';
 import AnalyticsChart from './AnalyticsChart';
 import ReportGenerator from './ReportGenerator';
-import CustomizableChart from './CustomizableChart';
 import MarketingDashboard from './MarketingDashboard';
 
 export default function AdvancedAnalytics() {
