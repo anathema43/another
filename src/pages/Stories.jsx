@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CalendarIcon, UserIcon, ClockIcon, ArrowRightIcon, PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { collection, getDocs, orderBy, query, limit, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, limit, where, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { useAuthStore } from "../store/authStore";
 import ResponsiveImage from "../components/ResponsiveImage";
 import LoadingSpinner from "../components/LoadingSpinner";
+import StoryEditor from "../components/StoryEditor";
 
 export default function Stories() {
   const { userProfile } = useAuthStore();
@@ -94,6 +95,25 @@ export default function Stories() {
         return new Date(b.publishedAt) - new Date(a.publishedAt);
     }
   });
+
+  const handleAddStory = () => {
+    window.location.href = '/#/admin';
+  };
+
+  const handleEditStory = (story) => {
+    window.location.href = `/#/admin/stories/edit/${story.id}`;
+  };
+
+  const handleDeleteStory = async (storyId) => {
+    if (window.confirm('Are you sure you want to delete this story?')) {
+      try {
+        await deleteDoc(doc(db, "stories", storyId));
+        fetchStories(); // Refresh the stories list
+      } catch (error) {
+        console.error('Error deleting story:', error);
+      }
+    }
+  };
 
   if (loading) {
     return <LoadingSpinner />;
@@ -324,13 +344,20 @@ export default function Stories() {
                   <div className="flex flex-wrap gap-2 mb-4">
                     {story.tags?.slice(0, 2).map(tag => (
                       <span key={tag} className="bg-organic-background text-organic-text px-2 py-1 rounded-full text-xs">
-              <Link
-                to="/admin"
-                className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
-                title="Manage in Admin Panel"
-              >
-                <PencilIcon className="w-4 h-4" />
-              </Link>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <Link 
+                    to={`/stories/${story.id}`}
+                    className="inline-flex items-center gap-2 text-organic-primary font-semibold hover:text-organic-highlight transition-colors"
+                  >
+                    Read More
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                </div>
+              </article>
+              ))}
             </div>
           )}
         </div>
