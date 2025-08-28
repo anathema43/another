@@ -61,12 +61,12 @@ export default function ReviewForm({ productId, onReviewSubmitted }) {
     return (
       <div className="bg-gray-50 p-6 rounded-lg text-center" data-cy="login-to-review">
         <p className="text-gray-600 mb-4">Please log in to write a review</p>
-        <a 
-          href="/#/login" 
+        <Link 
+          to="/login" 
           className="inline-block bg-organic-primary text-white px-4 py-2 rounded-lg hover:opacity-90"
         >
           Log In
-        </a>
+        </Link>
       </div>
     );
   }
