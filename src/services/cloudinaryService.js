@@ -26,16 +26,17 @@ class CloudinaryService {
     formData.append('file', file);
     formData.append('upload_preset', cloudinaryConfig.uploadPreset);
     
-    // Don't add folder parameter for unsigned uploads with preset that has asset folder
-    // The preset already defines the base folder as 'darjeelingsouls/products'
+    // Debug: Log what we're sending
+    console.log('Cloudinary upload attempt:', {
+      cloudName: cloudinaryConfig.cloudName,
+      uploadPreset: cloudinaryConfig.uploadPreset,
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type
+    });
     
     if (options.tags) {
       formData.append('tags', Array.isArray(options.tags) ? options.tags.join(',') : options.tags);
-    }
-
-    // Add transformation if specified
-    if (options.transformation) {
-      formData.append('transformation', options.transformation);
     }
 
     return new Promise((resolve, reject) => {
