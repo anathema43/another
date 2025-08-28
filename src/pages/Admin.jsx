@@ -278,15 +278,23 @@ export default function Admin() {
             {/* Products Tab */}
             {activeTab === 'products' && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                   <h2 className="text-xl font-semibold text-organic-text">Product Management</h2>
-                  <button
-                    onClick={() => setShowProductModal(true)}
-                    className="flex items-center gap-2 bg-organic-primary text-white px-4 py-2 rounded-lg hover:opacity-90"
-                  >
-                    <PlusIcon className="w-4 h-4" />
-                    Add Product
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowProductModal(true)}
+                      className="flex items-center gap-2 bg-organic-primary text-white px-4 py-2 rounded-lg hover:opacity-90"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                      Add Single Product
+                    </button>
+                    <button
+                      onClick={() => {/* Scroll to bulk upload */}}
+                      className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    >
+                      📊 Bulk Upload
+                    </button>
+                  </div>
                 </div>
 
                 {/* Search and Filter */}
@@ -310,6 +318,9 @@ export default function Admin() {
                       </option>
                     ))}
                   </select>
+                  <div className="text-sm text-gray-600 flex items-center">
+                    {filteredProducts.length} of {displayProducts.length} products
+                  </div>
                 </div>
 
                 {/* Bulk Upload */}

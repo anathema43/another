@@ -29,9 +29,13 @@ export default function AdminAlgoliaSync() {
     setSyncResult(null);
 
     try {
+      // Check if we have admin API key
+      if (!import.meta.env.VITE_ALGOLIA_ADMIN_KEY) {
+        throw new Error('Admin API key required for syncing. This should be set server-side for security.');
+      }
+      
       // Sync all products to Algolia
       const result = await searchService.bulkIndexProducts(products);
-      
       setSyncResult({
         success: true,
         message: `Successfully synced ${products.length} products to Algolia`,
@@ -40,7 +44,7 @@ export default function AdminAlgoliaSync() {
     } catch (error) {
       setSyncResult({
         success: false,
-        message: `Error syncing products: ${error.message}`,
+        message: `Sync requires server-side setup. Current error: ${error.message}`,
         count: 0
       });
     } finally {
@@ -53,8 +57,12 @@ export default function AdminAlgoliaSync() {
     setConfigResult(null);
 
     try {
-      await searchService.configureIndex();
+      // Check if we have admin API key
+      if (!import.meta.env.VITE_ALGOLIA_ADMIN_KEY) {
+        throw new Error('Admin API key required for configuration. This should be set server-side for security.');
+      }
       
+      await searchService.configureIndex();
       setConfigResult({
         success: true,
         message: 'Algolia index configured successfully'
@@ -62,7 +70,7 @@ export default function AdminAlgoliaSync() {
     } catch (error) {
       setConfigResult({
         success: false,
-        message: `Error configuring index: ${error.message}`
+        message: `Configuration requires server-side setup. Current error: ${error.message}`
       });
     } finally {
       setIsConfiguring(false);

@@ -15,8 +15,34 @@ export default function ImageUpload({
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
 
+  const validateFile = (file) => {
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+    if (!file) {
+      throw new Error('No file provided');
+    }
+
+    if (file.size > maxSize) {
+      throw new Error(`File size too large. Maximum size is 50MB`);
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('Invalid file type. Please upload a JPEG, PNG, or WebP image.');
+    }
+  };
+
   const handleFileSelect = (file) => {
     if (!file) return;
+
+    try {
+      validateFile(file);
+    } catch (error) {
+      if (onError) {
+        onError(error.message);
+      }
+      return;
+    }
 
     // Create preview
     const reader = new FileReader();
@@ -168,7 +194,7 @@ export default function ImageUpload({
               />
             </div>
             <p className="mt-1 text-xs text-gray-500">
-              PNG, JPG, WebP up to 10MB
+              PNG, JPG, WebP up to 50MB
             </p>
           </div>
         )}
