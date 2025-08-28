@@ -97,6 +97,15 @@ export default function ImageUpload({
       }
 
       setPreview(result.secureUrl);
+      
+      // Show success message
+      console.log('✅ Upload successful!', {
+        publicId: result.publicId,
+        secureUrl: result.secureUrl,
+        width: result.width,
+        height: result.height,
+        bytes: result.bytes
+      });
     } catch (error) {
       console.error('Upload error:', error);
       
@@ -186,7 +195,7 @@ export default function ImageUpload({
             {uploading && (
               <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
                 <div className="text-center text-white">
-                  <div className="mb-2">Uploading...</div>
+                  <div className="mb-2">Uploading to Cloudinary...</div>
                   <div className="w-32 bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-organic-primary h-2 rounded-full transition-all duration-300"
@@ -244,6 +253,21 @@ export default function ImageUpload({
                   style={{ width: `${progress}%` }}
                 />
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Indicator */}
+      {preview && !uploading && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4" data-cy="upload-success">
+          <div className="flex items-center">
+            <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <div className="flex-1">
+              <div className="text-green-800 font-medium">Upload Successful!</div>
+              <div className="text-green-600 text-sm">Image uploaded and optimized by Cloudinary</div>
             </div>
           </div>
         </div>
