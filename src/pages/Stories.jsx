@@ -295,10 +295,10 @@ export default function Stories() {
               </p>
               {isAdmin && (
                 <button
-                  onClick={handleAddStory}
+                  onClick={() => window.location.href = '/#/admin'}
                   className="bg-organic-primary text-white px-6 py-3 rounded-lg hover:opacity-90"
                 >
-                  Create First Story
+                  Create Stories in Admin Panel
                 </button>
               )}
             </div>
