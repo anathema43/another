@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { razorpayService } from '../services/razorpayService';
+import { isRazorpayConfigured } from '../config/razorpay';
 import { useCartStore } from '../store/cartStore';
 import { useOrderStore } from '../store/orderStore';
 import formatCurrency from '../utils/formatCurrency';
@@ -8,6 +9,34 @@ export default function RazorpayCheckout({ orderData, onSuccess, onError }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const { clearCart } = useCartStore();
   const { createOrder } = useOrderStore();
+
+  // Check if Razorpay is configured
+  if (!isRazorpayConfigured) {
+    return (
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-yellow-800 mb-2">
+          💳 Payment Configuration Required
+        </h3>
+        <p className="text-yellow-700 mb-4">
+          Razorpay payment gateway is not configured yet. Please add your Razorpay keys to enable payments.
+        </p>
+        <div className="text-sm text-yellow-600">
+          <p><strong>Required:</strong> VITE_RAZORPAY_KEY_ID in environment variables</p>
+          <p><strong>For testing:</strong> Use keys starting with rzp_test_</p>
+        </div>
+        <button
+          onClick={() => onSuccess({ 
+            ...orderData, 
+            paymentStatus: 'demo',
+            paymentMethod: 'demo' 
+          })}
+          className="mt-4 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700"
+        >
+          Complete Demo Order (No Payment)
+        </button>
+      </div>
+    );
+  }
 
   const handlePayment = async () => {
     setIsProcessing(true);

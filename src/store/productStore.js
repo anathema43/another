@@ -27,9 +27,52 @@ export const useProductStore = create((set, get) => ({
     try {
       // Check if Firestore is available
       if (!db) {
-        console.warn('Firestore not available - cannot load products');
-        set({ products: [], categories: [], loading: false, error: null });
-        return [];
+        // Use demo products when Firebase not configured
+        const demoProducts = [
+          {
+            id: 'demo-1',
+            name: 'Darjeeling Pickle',
+            description: 'Authentic spicy pickle from the hills of Darjeeling, made with traditional recipes.',
+            price: 299,
+            image: 'https://res.cloudinary.com/dj4kdlwzo/image/upload/v1752940186/pickle_3_co88iu.jpg',
+            quantityAvailable: 10,
+            category: 'pickle',
+            rating: 4.5,
+            reviewCount: 12,
+            artisan: 'Deepak Sharma',
+            featured: true
+          },
+          {
+            id: 'demo-2',
+            name: 'Himalayan Wild Honey',
+            description: 'Pure organic honey from high-altitude forests, collected using traditional methods.',
+            price: 499,
+            image: 'https://images.pexels.com/photos/1638280/pexels-photo-1638280.jpeg?auto=compress&cs=tinysrgb&w=800',
+            quantityAvailable: 7,
+            category: 'honey',
+            rating: 5,
+            reviewCount: 8,
+            artisan: 'Laxmi Devi',
+            featured: true
+          },
+          {
+            id: 'demo-3',
+            name: 'Organic Red Rice',
+            description: 'Nutrient-rich red rice from Himalayan valleys, grown without chemicals.',
+            price: 450,
+            image: 'https://images.pexels.com/photos/33239/wheat-field-wheat-cereals-grain.jpg?auto=compress&cs=tinysrgb&w=800',
+            quantityAvailable: 15,
+            category: 'grains',
+            rating: 4.8,
+            reviewCount: 15,
+            artisan: 'Ashok Singh',
+            featured: false
+          }
+        ];
+        
+        const categories = [...new Set(demoProducts.map(p => p.category))];
+        set({ products: demoProducts, categories, loading: false });
+        return demoProducts;
       }
       
       const querySnapshot = await getDocs(collection(db, "products"));
@@ -53,6 +96,14 @@ export const useProductStore = create((set, get) => ({
   fetchFeaturedProducts: async () => {
     set({ error: null });
     try {
+      if (!db) {
+        // Use demo featured products
+        const { products } = get();
+        const featured = products.filter(p => p.featured);
+        set({ featuredProducts: featured });
+        return featured;
+      }
+      
       const q = query(
         collection(db, "products"),
         where("featured", "==", true),
@@ -94,9 +145,13 @@ export const useProductStore = create((set, get) => ({
   },
 
   getProductById: async (id) => {
+    // Try to find in current products first
+    const { products } = get();
+    const foundProduct = products.find(p => p.id === id);
+    if (foundProduct) return foundProduct;
+    
     if (!db) {
-      console.warn('Firebase not configured, using demo mode');
-      return null;
+      return null; // Product not found in demo mode
     }
     
     try {

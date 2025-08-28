@@ -21,9 +21,44 @@ export const useArtisanStore = create((set, get) => ({
 
   fetchArtisans: async () => {
     if (!db) {
-      console.warn('Firestore not available - cannot load artisans');
-      set({ artisans: [], loading: false, error: 'Firestore not configured' });
-      return [];
+      // Use demo artisans when Firebase not configured
+      const demoArtisans = [
+        {
+          id: 'demo-artisan-1',
+          name: 'Deepak Sharma',
+          title: 'Master Pickle Maker',
+          location: 'Darjeeling, West Bengal',
+          region: 'West Bengal',
+          experience: 25,
+          profileImage: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=800',
+          shortBio: 'Third-generation pickle maker specializing in traditional Darjeeling recipes.',
+          story: 'Deepak learned the art of pickle making from his grandmother...',
+          specialties: ['Traditional Pickles', 'Fermentation', 'Spice Blending'],
+          rating: 4.8,
+          reviewCount: 24,
+          featured: true,
+          productCount: 3
+        },
+        {
+          id: 'demo-artisan-2',
+          name: 'Laxmi Devi',
+          title: 'Wild Honey Collector',
+          location: 'Manali, Himachal Pradesh',
+          region: 'Himachal Pradesh',
+          experience: 18,
+          profileImage: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=800',
+          shortBio: 'Expert honey collector using traditional sustainable methods.',
+          story: 'Laxmi comes from a family of traditional honey collectors...',
+          specialties: ['Wild Honey Collection', 'Sustainable Harvesting'],
+          rating: 4.9,
+          reviewCount: 18,
+          featured: true,
+          productCount: 2
+        }
+      ];
+      
+      set({ artisans: demoArtisans, loading: false });
+      return demoArtisans;
     }
     
     set({ loading: true, error: null });
@@ -71,9 +106,13 @@ export const useArtisanStore = create((set, get) => ({
   },
 
   getArtisanById: async (id) => {
+    // Try to find in current artisans first
+    const { artisans } = get();
+    const foundArtisan = artisans.find(a => a.id === id);
+    if (foundArtisan) return foundArtisan;
+    
     if (!db) {
-      console.warn('Firebase not configured, using demo mode');
-      return null;
+      return null; // Artisan not found in demo mode
     }
     
     try {

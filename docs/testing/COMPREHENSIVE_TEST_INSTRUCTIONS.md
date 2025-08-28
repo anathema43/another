@@ -264,6 +264,9 @@ cy.wait(2000)
 - [ ] Stories and artisans display
 - [ ] "Read Story" links work
 - [ ] Artisan profiles load
+- [ ] Admin can manage stories
+- [ ] Payment flow works (demo or real)
+- [ ] Email notifications send
 
 ### **Enhanced Features (Should Pass):**
 - [ ] Wishlist functionality

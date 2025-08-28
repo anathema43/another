@@ -183,10 +183,11 @@ New Order → Processing → Shipped → Delivered
 ### **Story Management Tab Features**
 
 #### **Story Content System**
-- **Story Table**: Visual story cards with titles, authors, and categories
+- **Story Table**: Complete story management with titles, authors, categories, and status
 - **Featured Stories**: Highlight important stories on homepage
-- **Quick Actions**: Edit stories, manage featured status, delete content
+- **Quick Actions**: Edit stories, toggle featured status, delete content
 - **Category Management**: Organize stories by type and topic
+- **Bulk Operations**: Manage multiple stories efficiently
 
 #### **Adding New Stories**
 
@@ -225,6 +226,9 @@ New Order → Processing → Shipped → Delivered
 3. **Regular Updates**: Publish weekly stories for engagement
 4. **Visual Quality**: Use high-resolution, relevant images
 5. **SEO Optimization**: Include relevant tags and descriptions
+6. **Featured Rotation**: Change featured story weekly for freshness
+7. **Category Balance**: Maintain diverse content across categories
+8. **Community Focus**: Highlight positive community impact
 
 ---
 

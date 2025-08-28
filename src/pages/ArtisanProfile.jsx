@@ -20,20 +20,13 @@ export default function ArtisanProfile() {
     const fetchArtisanData = async () => {
       setLoading(true);
       try {
-        if (!db) {
-          console.warn('Firestore not available - cannot load artisan');
-          setError("Database not available");
-          setLoading(false);
-          return;
+        const artisanData = getArtisanById ? await getArtisanById(id) : null;
+        if (artisanData) {
+          setArtisan(artisanData);
+          const products = getArtisanProducts ? await getArtisanProducts(id) : [];
+          setArtisanProducts(products);
         } else {
-          const artisanData = getArtisanById ? await getArtisanById(id) : null;
-          if (artisanData) {
-            setArtisan(artisanData);
-            const products = getArtisanProducts ? await getArtisanProducts(id) : [];
-            setArtisanProducts(products);
-          } else {
-            setError("Artisan not found");
-          }
+          setError("Artisan not found");
         }
       } catch (err) {
         console.error('Error fetching artisan:', err);

@@ -2,6 +2,7 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import ResponsiveImage from "../components/ResponsiveImage";
 import { useProductStore } from "../store/productStore";
+import { db } from "../firebase/firebase";
 import ReviewStars from "../components/ReviewStars";
 import WishlistButton from "../components/WishlistButton";
 import AddToCartButton from "../components/AddToCartButton";
@@ -22,12 +23,6 @@ export default function ProductDetail() {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        if (!db) {
-          console.warn('Firebase not configured - using demo mode');
-          setError("Database not available");
-          return;
-        }
-        
         // Try to get from store first
         let foundProduct = products.find((p) => p.id === id);
         

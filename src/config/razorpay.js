@@ -32,4 +32,4 @@ const loadRazorpayScript = () => {
   });
 };
 
-export { razorpayConfig, loadRazorpayScript,  };
+export { razorpayConfig, loadRazorpayScript, isRazorpayConfigured };

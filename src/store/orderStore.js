@@ -121,6 +121,26 @@ export const useOrderStore = create((set, get) => ({
     const { currentUser } = useAuthStore.getState();
     if (!currentUser) throw new Error("User not authenticated");
     
+    if (!db) {
+      // Demo mode - simulate order creation
+      const demoOrder = {
+        ...orderData,
+        id: `demo-order-${Date.now()}`,
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        status: "processing",
+        orderNumber: `ORD-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+      };
+      
+      set(state => ({
+        orders: [...state.orders, demoOrder],
+        userOrders: [...state.userOrders, demoOrder]
+      }));
+      
+      return demoOrder;
+    }
+    
     const order = {
       ...orderData,
       userId: currentUser.uid,

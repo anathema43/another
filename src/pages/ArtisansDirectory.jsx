@@ -125,8 +125,8 @@ export default function ArtisansDirectory() {
   ];
 
   // Use demo data if Firebase isn't configured or no data
-  const displayArtisans = artisans.length > 0 ? artisans : [];
-  const displayFeaturedArtisans = featuredArtisans.length > 0 ? featuredArtisans : [];
+  const displayArtisans = artisans.length > 0 ? artisans : demoArtisans;
+  const displayFeaturedArtisans = featuredArtisans.length > 0 ? featuredArtisans : demoArtisans.filter(a => a.featured);
 
   // Get unique regions from artisans
   const regions = React.useMemo(() => {

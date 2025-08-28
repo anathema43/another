@@ -201,7 +201,9 @@ firebase deploy --only functions
 2. Add items to cart
 3. Create user account
 4. Complete checkout
-5. Check admin panel for orders
+5. Test payment flow (demo mode if Razorpay not configured)
+6. Check admin panel for orders
+7. Test story and artisan content
 
 ---
 

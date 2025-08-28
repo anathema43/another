@@ -28,9 +28,34 @@ export default function Stories() {
     setLoading(true);
     try {
       if (!db) {
-        console.warn('Firestore not available - cannot load stories');
-        setStories([]);
-        setFeaturedStory(null);
+        // Use demo stories when Firebase not configured
+        const demoStories = [
+          {
+            id: 'demo-story-1',
+            title: 'The Ancient Art of Darjeeling Pickle Making',
+            excerpt: 'Discover how Deepak Sharma preserves traditional pickle-making techniques passed down through generations.',
+            author: 'Deepak Sharma',
+            authorImage: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=800',
+            authorBio: 'Third-generation pickle maker from Darjeeling',
+            category: 'artisan-story',
+            featuredImage: 'https://images.pexels.com/photos/4198017/pexels-photo-4198017.jpeg?auto=compress&cs=tinysrgb&w=800',
+            publishedAt: new Date().toISOString(),
+            readTime: '5 min read',
+            featured: true,
+            tags: ['traditional-recipes', 'family-heritage', 'pickle-making'],
+            content: `In the early morning mist of Darjeeling, when the hills are shrouded in clouds and the air carries the scent of tea gardens, Deepak Sharma begins his day as his grandmother taught him - with respect for tradition and an eye for perfection.
+
+## The Traditional Method
+
+Deepak's pickle-making process hasn't changed in three generations. He starts by selecting the finest vegetables from local farmers, ensuring each piece meets his exacting standards. The secret, he says, lies not just in the spices, but in the timing and the love that goes into each jar.
+
+## Community Impact
+
+Every jar of Deepak's pickle sold supports not just his family of 6, but also provides steady income to 8 local women who work in his small workshop. This is the true soul of Darjeeling - where tradition meets community support.`
+          }
+        ];
+        setStories(demoStories);
+        setFeaturedStory(demoStories[0]);
         setLoading(false);
         return;
       }

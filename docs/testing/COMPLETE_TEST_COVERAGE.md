@@ -28,7 +28,8 @@ src/store/__tests__/
 ├── wishlistStore.test.js ✅ 95% coverage
 ├── orderStore.test.js ✅ 85% coverage
 ├── reviewStore.test.js ✅ 90% coverage
-└── artisanStore.test.js ✅ 90% coverage
+├── artisanStore.test.js ✅ 90% coverage
+└── storyStore.test.js ✅ 85% coverage
 ```
 
 ### **Firebase Integration Tests**
@@ -38,7 +39,8 @@ src/test/firebase/
 ├── firestore-operations.test.js ✅ 90% coverage
 ├── auth-operations.test.js ✅ 95% coverage
 ├── security-rules.test.js ✅ 100% coverage
-└── real-time-features.test.js ✅ 90% coverage
+├── real-time-features.test.js ✅ 90% coverage
+└── story-operations.test.js ✅ 85% coverage
 ```
 
 ### **Component Tests**
@@ -91,7 +93,10 @@ cypress/e2e/
 ├── cart-persistence.cy.js ✅ Cart user isolation
 ├── wishlist-persistence.cy.js ✅ Wishlist functionality
 ├── authentication-routing.cy.js ✅ Auth routing
-└── real-time-features.cy.js ✅ Cross-tab sync
+├── real-time-features.cy.js ✅ Cross-tab sync
+├── admin-stories.cy.js ✅ Story management
+├── checkout-flow.cy.js ✅ Payment integration
+└── complete-user-flow.cy.js ✅ End-to-end journey
 ```
 
 ### **Specialized Test Suites**

@@ -20,8 +20,31 @@ export default function StoryDetail() {
     setLoading(true);
     try {
       if (!db) {
-        console.warn('Firestore not available - cannot load story');
-        setStory(null);
+        // Use demo story when Firebase not configured
+        const demoStory = {
+          id: id,
+          title: 'The Ancient Art of Darjeeling Pickle Making',
+          excerpt: 'Discover how Deepak Sharma preserves traditional pickle-making techniques.',
+          author: 'Deepak Sharma',
+          authorImage: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=800',
+          authorBio: 'Third-generation pickle maker from Darjeeling',
+          category: 'artisan-story',
+          featuredImage: 'https://images.pexels.com/photos/4198017/pexels-photo-4198017.jpeg?auto=compress&cs=tinysrgb&w=800',
+          publishedAt: new Date().toISOString(),
+          readTime: '5 min read',
+          featured: true,
+          tags: ['traditional-recipes', 'family-heritage'],
+          content: `In the early morning mist of Darjeeling, when the hills are shrouded in clouds and the air carries the scent of tea gardens, Deepak Sharma begins his day as his grandmother taught him - with respect for tradition and an eye for perfection.
+
+## The Traditional Method
+
+Deepak's pickle-making process hasn't changed in three generations. He starts by selecting the finest vegetables from local farmers, ensuring each piece meets his exacting standards.
+
+## Community Impact
+
+Every jar of Deepak's pickle sold supports not just his family of 6, but also provides steady income to 8 local women who work in his small workshop.`
+        };
+        setStory(demoStory);
         setLoading(false);
         return;
       }
