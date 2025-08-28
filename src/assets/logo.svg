@@ -1,17 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" fill="currentColor">
-  <g>
-    <!-- Mountain Icon -->
-    <path d="M20 50 L35 25 L50 50 Z" fill="currentColor" opacity="0.8"/>
-    <path d="M25 50 L40 30 L55 50 Z" fill="currentColor"/>
-    
-    <!-- Darjeeling Text -->
-    <text x="70" y="35" font-family="serif" font-size="18" font-weight="bold" fill="currentColor">
-      Darjeeling
-    </text>
-    
-    <!-- Soul Text -->
-    <text x="70" y="55" font-family="serif" font-size="14" fill="currentColor" opacity="0.9">
-      Soul
-    </text>
-  </g>
-</svg>
+<![CDATA[<svg width="200" height="200" viewBox="0 0 200 200" fill="#D9734E" xmlns="http://www.w3.org/2000/svg">
+<style>
+    .cls-1 {
+        fill: currentColor;
+    }
+    .cls-2 {
+        font-size: 36px;
+        font-family: 'Playfair Display', serif;
+        font-weight: bold;
+        fill: currentColor;
+    }
+    .cls-3 {
+        font-size: 24px;
+        font-family: 'Playfair Display', serif;
+        fill: currentColor;
+    }
+</style>
+<g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+        <path class="cls-1" d="M100,20l-40,70h80Z"/>
+        <text class="cls-2" transform="translate(20 130)">Darjeeling</text>
+        <text class="cls-3" transform="translate(70 165)">Soul</text>
+    </g>
+</g>
+</svg>]]>
