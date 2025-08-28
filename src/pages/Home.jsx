@@ -1,20 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { TruckIcon, BeakerIcon, HandRaisedIcon, StarIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/outline";
 import ResponsiveImage from "../components/ResponsiveImage";
 import AddToCartButton from "../components/AddToCartButton";
 import Logo from "../components/Logo";
 import { useProductStore } from "../store/productStore";
+import { useAuthStore } from "../store/authStore";
+import ProductFormModal from "../components/ProductFormModal";
 import formatCurrency from "../utils/formatCurrency";
 
 export default function Home() {
   const { products, featuredProducts, fetchProducts, fetchFeaturedProducts, loading } = useProductStore();
+  const { userProfile } = useAuthStore();
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = React.useState(true);
   const [touchStart, setTouchStart] = React.useState(0);
   const [touchEnd, setTouchEnd] = React.useState(0);
+  const [showProductModal, setShowProductModal] = React.useState(false);
+  const [editingProduct, setEditingProduct] = React.useState(null);
   const sliderRef = React.useRef(null);
   
+  const isAdmin = userProfile?.role === 'admin';
+
   React.useEffect(() => {
     // Fetch both regular products and featured products
     const loadProducts = async () => {
@@ -95,6 +103,22 @@ export default function Home() {
     setCurrentSlide((prev) => (prev + 1) % displayProducts.length);
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 3000);
+  };
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setShowProductModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowProductModal(false);
+    setEditingProduct(null);
+  };
+
+  const handleModalSave = () => {
+    handleModalClose();
+    // Refresh featured products
+    fetchFeaturedProducts();
   };
 
   // Loading state component
@@ -247,7 +271,26 @@ export default function Home() {
           {/* Simple 2-Product Layout */}
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Rice Product */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative">
+              {/* Admin Edit Button */}
+              {isAdmin && (
+                <button
+                  onClick={() => handleEditProduct({
+                    id: 'demo-rice-product',
+                    name: 'Organic Red Rice',
+                    description: 'Nutrient-rich, farm to table red rice from Himalayan valleys, grown without chemicals in terraced fields.',
+                    price: 450,
+                    image: 'https://images.pexels.com/photos/33239/wheat-field-wheat-cereals-grain.jpg?auto=compress&cs=tinysrgb&w=800',
+                    category: 'grains',
+                    quantityAvailable: 15,
+                    featured: true
+                  })}
+                  className="absolute top-4 right-4 z-10 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                  title="Edit Product"
+                >
+                  <PencilIcon className="w-4 h-4" />
+                </button>
+              )}
               <div className="relative overflow-hidden">
                 <ResponsiveImage
                   src="https://images.pexels.com/photos/33239/wheat-field-wheat-cereals-grain.jpg?auto=compress&cs=tinysrgb&w=800"
@@ -296,7 +339,26 @@ export default function Home() {
             </div>
 
             {/* Wheat Product */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative">
+              {/* Admin Edit Button */}
+              {isAdmin && (
+                <button
+                  onClick={() => handleEditProduct({
+                    id: 'demo-wheat-product',
+                    name: 'Himalayan Buckwheat',
+                    description: 'Gluten-free, sustainably harvested buckwheat from high altitudes, perfect for traditional pancakes and porridge.',
+                    price: 380,
+                    image: 'https://images.pexels.com/photos/4198015/pexels-photo-4198015.jpeg?auto=compress&cs=tinysrgb&w=800',
+                    category: 'grains',
+                    quantityAvailable: 12,
+                    featured: true
+                  })}
+                  className="absolute top-4 right-4 z-10 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                  title="Edit Product"
+                >
+                  <PencilIcon className="w-4 h-4" />
+                </button>
+              )}
               <div className="relative overflow-hidden">
                 <ResponsiveImage
                   src="https://images.pexels.com/photos/4198015/pexels-photo-4198015.jpeg?auto=compress&cs=tinysrgb&w=800"
@@ -505,6 +567,16 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Product Edit Modal */}
+      {showProductModal && (
+        <ProductFormModal
+          product={editingProduct}
+          artisans={[]} // Empty for demo products
+          onClose={handleModalClose}
+          onSave={handleModalSave}
+        />
+      )}
     </div>
   );
 }

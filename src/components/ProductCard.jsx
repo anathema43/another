@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { PencilIcon } from "@heroicons/react/24/outline";
 import ResponsiveImage from "./ResponsiveImage";
 import ReviewStars from "./ReviewStars";
 import WishlistButton from "./WishlistButton";
@@ -7,9 +8,21 @@ import AddToCartButton from "./AddToCartButton";
 import formatCurrency from "../utils/formatCurrency";
 import ArtisanCard from "./ArtisanCard";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, isAdmin = false, onEdit }) {
   return (
-    <article className="bg-white rounded-lg shadow-lg p-4 flex flex-col transition-all duration-200 hover:shadow-xl hover:-translate-y-1 focus-within:ring-2 focus-within:ring-organic-primary focus-within:ring-offset-2" data-cy="product-card" role="article" aria-labelledby={`product-title-${product.id}`}>
+    <article className="bg-white rounded-lg shadow-lg p-4 flex flex-col transition-all duration-200 hover:shadow-xl hover:-translate-y-1 focus-within:ring-2 focus-within:ring-organic-primary focus-within:ring-offset-2 relative" data-cy="product-card" role="article" aria-labelledby={`product-title-${product.id}`}>
+      {/* Admin Edit Button */}
+      {isAdmin && onEdit && (
+        <button
+          onClick={() => onEdit(product)}
+          className="absolute top-2 right-2 z-10 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+          title="Edit Product"
+          data-cy="edit-product-button"
+        >
+          <PencilIcon className="w-4 h-4" />
+        </button>
+      )}
+      
       <div className="relative">
         <ResponsiveImage
           src={product.image}
@@ -18,7 +31,7 @@ export default function ProductCard({ product }) {
           sizes="(max-width: 768px) 300px, (max-width: 1024px) 400px, 500px"
           data-cy="product-image"
         />
-        <div className="absolute top-2 right-2">
+        <div className={`absolute top-2 ${isAdmin ? 'right-12' : 'right-2'}`}>
           <WishlistButton productId={product.id} />
         </div>
         {product.quantityAvailable === 0 && (
