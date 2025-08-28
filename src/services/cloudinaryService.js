@@ -69,7 +69,14 @@ class CloudinaryService {
             reject(new Error('Invalid response from Cloudinary'));
           }
         } else {
-          reject(new Error(`Upload failed with status ${xhr.status}`));
+          try {
+            const errorResponse = JSON.parse(xhr.responseText);
+            console.error('Cloudinary error details:', errorResponse);
+            reject(new Error(`Upload failed: ${errorResponse.error?.message || xhr.statusText}`));
+          } catch (parseError) {
+            console.error('Raw Cloudinary error response:', xhr.responseText);
+            reject(new Error(`Upload failed with status ${xhr.status}: ${xhr.statusText}`));
+          }
         }
       });
 
