@@ -1,24 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="currentColor">
+  <defs>
+    <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:currentColor;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:currentColor;stop-opacity:0.7" />
+    </linearGradient>
+  </defs>
+  
   <!-- Mountain silhouette representing Darjeeling hills -->
-  <path d="M20 140 L60 80 L100 100 L140 60 L180 120 L200 110 L200 180 L0 180 Z" 
-        fill="currentColor" opacity="0.8"/>
+  <path d="M20 150 L50 100 L80 120 L120 80 L160 110 L180 90 L200 120 L200 180 L20 180 Z" 
+        fill="url(#mountainGradient)" opacity="0.8"/>
   
   <!-- Tea leaf design -->
-  <path d="M100 50 Q120 70 100 90 Q80 70 100 50 Z" 
-        fill="currentColor" opacity="0.9"/>
+  <path d="M100 60 Q90 50 85 65 Q90 80 100 75 Q110 80 115 65 Q110 50 100 60 Z" 
+        fill="currentColor"/>
   
-  <!-- Stylized "DS" monogram -->
-  <g transform="translate(100, 100)">
-    <!-- D -->
-    <path d="M-30 -20 L-30 20 L-10 20 Q10 20 10 0 Q10 -20 -10 -20 Z" 
-          fill="currentColor"/>
-    <!-- S -->
-    <path d="M15 -20 Q35 -20 35 -10 Q35 0 25 0 Q35 0 35 10 Q35 20 15 20" 
-          stroke="currentColor" stroke-width="3" fill="none"/>
-  </g>
+  <!-- Stem -->
+  <line x1="100" y1="75" x2="100" y2="90" stroke="currentColor" stroke-width="2"/>
   
-  <!-- Decorative elements -->
-  <circle cx="50" cy="60" r="3" fill="currentColor" opacity="0.6"/>
-  <circle cx="150" cy="70" r="2" fill="currentColor" opacity="0.6"/>
-  <circle cx="70" cy="130" r="2" fill="currentColor" opacity="0.6"/>
-</svg></svg>
+  <!-- Mountain peaks -->
+  <path d="M40 130 L60 100 L80 130 M120 120 L140 90 L160 120" 
+        stroke="currentColor" stroke-width="2" fill="none"/>
+  
+  <!-- Decorative dots representing tea gardens -->
+  <circle cx="70" cy="140" r="2" fill="currentColor" opacity="0.6"/>
+  <circle cx="130" cy="135" r="2" fill="currentColor" opacity="0.6"/>
+  <circle cx="90" cy="145" r="1.5" fill="currentColor" opacity="0.6"/>
+  <circle cx="150" cy="140" r="1.5" fill="currentColor" opacity="0.6"/>
+</svg>
