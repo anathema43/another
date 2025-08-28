@@ -53,9 +53,6 @@
 - User accounts with comprehensive order history
 - Real-time shopping cart synchronization across browser tabs
 - Multi-step checkout process with shipping management
-- Razorpay payment integration (frontend complete)
-- Tax calculation (8% of subtotal)
-- Shipping calculation (free over ₹500, ₹50 under)
 - Wishlist functionality with real-time updates
 - Product reviews and ratings system
 - Inventory management with automated alerts
@@ -117,6 +114,8 @@
 - Bulk CSV product upload for scalable inventory management
 - Complete CRUD operations for all entities
 - Order management system with status tracking
+- Story management with featured status control
+- Centralized content management
 - Inventory management with low-stock alerts
 - Search index synchronization and analytics
 - User management and role-based access control

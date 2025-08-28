@@ -40,6 +40,12 @@ As an admin, you can easily edit **any page content** without touching code! Her
 3. Edit in the popup form
 4. Save changes
 
+### **✅ How to Manage Stories:**
+1. Go to Admin Panel (`/admin`)
+2. Click "Stories" tab
+3. Use table to edit, delete, or manage featured status
+4. Click "Add Story" to create new content
+
 ---
 
 ## 📖 **Managing Stories (Weekly Updates)**
