@@ -298,7 +298,7 @@ export default function Stories() {
                   onClick={() => window.location.href = '/#/admin'}
                   className="bg-organic-primary text-white px-6 py-3 rounded-lg hover:opacity-90"
                 >
-                  Create Stories in Admin Panel
+                  Manage Stories
                 </button>
               )}
             </div>
