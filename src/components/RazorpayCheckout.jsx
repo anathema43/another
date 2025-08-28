@@ -59,12 +59,21 @@ export default function RazorpayCheckout({ orderData, onSuccess, onError }) {
           {orderData.items.map((item, index) => (
             <div key={index} className="flex justify-between items-center">
               <div>
-                <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                <span className="font-medium">{item.name}</span>
+                <span className="text-gray-600"> x {item.quantity}</span>
               </div>
               <p className="font-medium">{formatCurrency(item.price * item.quantity)}</p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-4 p-4 bg-white rounded border">
+          <h4 className="font-semibold mb-2">Shipping Address:</h4>
+          <div className="text-sm text-gray-600">
+            {orderData.shippingInfo.firstName} {orderData.shippingInfo.lastName}<br />
+            {orderData.shippingInfo.address}<br />
+            {orderData.shippingInfo.city}, {orderData.shippingInfo.state} {orderData.shippingInfo.zipCode}
+          </div>
         </div>
 
         <div className="border-t mt-4 pt-4 space-y-2">
