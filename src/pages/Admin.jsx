@@ -70,7 +70,23 @@ export default function Admin() {
   // Fetch stories
   const fetchStories = async () => {
     try {
-      if (!db) return;
+      if (!db) {
+        // Use demo stories in admin panel
+        const demoStories = [
+          {
+            id: 'demo-story-1',
+            title: 'The Ancient Art of Darjeeling Pickle Making',
+            author: 'Deepak Sharma',
+            category: 'artisan-story',
+            featured: true,
+            publishedAt: new Date().toISOString(),
+            readTime: '5 min read'
+          }
+        ];
+        setStories(demoStories);
+        return;
+      }
+      
       const { collection, getDocs } = await import('firebase/firestore');
       const querySnapshot = await getDocs(collection(db, 'stories'));
       const storiesData = querySnapshot.docs.map(doc => ({
