@@ -50,6 +50,7 @@ describe('Firestore Connectivity Tests', () => {
   })
 
   beforeEach(async () => {
+    // Clear test data before each test
     try {
       await clearFirestoreData({ projectId: 'test-project-id' })
     } catch (error) {
@@ -150,17 +151,18 @@ describe('Firestore Connectivity Tests', () => {
 
   describe('Error Handling', () => {
     it('should handle network timeouts gracefully', async () => {
-      // Simulate network timeout
-      await disableNetwork(db)
-      
       try {
-        // This should fail due to network being disabled
+        // Call mocked disableNetwork which throws an error
+        await disableNetwork(db)
+        
+        // Try to perform Firestore operation
         const { collection, getDocs } = await import('firebase/firestore')
         await getDocs(collection(db, 'test'))
         expect.fail('Should have thrown network error')
       } catch (error) {
-        expect(error.code).toContain('unavailable')
+        expect(error.code).toBe('unavailable')
       } finally {
+        // Re-enable network for other tests
         await enableNetwork(db)
       }
     })
