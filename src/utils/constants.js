@@ -49,7 +49,7 @@ export const APP_CONFIG = {
   tagline: 'Authentic Darjeeling Hill Products',
   description: 'Handpicked, Organically Grown in the Darjeeling Hills',
   currency: 'INR',
-  defaultLanguage: 'en'
+  language: 'en'
 };
 
 export const PAYMENT_METHODS = {

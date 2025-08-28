@@ -89,8 +89,8 @@ export const useAuthStore = create(
           createdAt: new Date().toISOString(),
           addresses: [],
           preferences: {
-            currency: 'INR',
-            language: 'en'
+            notifications: true,
+            newsletter: false
           }
         };
         
@@ -214,8 +214,8 @@ export const useAuthStore = create(
           createdAt: new Date().toISOString(),
           addresses: [],
           preferences: {
-            currency: 'USD',
-            language: 'en'
+            notifications: true,
+            newsletter: false
           }
         };
         await setDoc(userDocRef, userProfile);

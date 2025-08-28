@@ -170,39 +170,12 @@ export default function UserProfileEditor() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-organic-text mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                name="displayName"
-                value={formData.displayName}
-                onChange={handleInputChange}
-                disabled={!isEditing}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-organic-primary focus:border-transparent disabled:bg-gray-100"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-organic-text mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                value={currentUser.email}
-                disabled
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100"
-              />
-              <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-organic-text mb-2">
-                Phone Number
-              </label>
-              <input
-                type="tel"
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="font-medium text-organic-text mb-2">Platform Settings</h4>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p><strong>Currency:</strong> Indian Rupee (₹)</p>
+                <p><strong>Language:</strong> English</p>
+              </div>
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
