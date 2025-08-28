@@ -174,6 +174,9 @@ export const useCartStore = create(
     }),
     {
       name: "ramro-cart-storage",
+      partialize: (state) => ({ 
+        cart: state.cart 
+      }),
     }
   )
 );

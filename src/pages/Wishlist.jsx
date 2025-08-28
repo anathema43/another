@@ -3,11 +3,12 @@ import { useWishlistStore } from "../store/wishlistStore";
 import { useProductStore } from "../store/productStore";
 import { useCartStore } from "../store/cartStore";
 import { useAuthStore } from "../store/authStore";
+import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function Wishlist() {
-  const { wishlist, loading, loadWishlist } = useWishlistStore();
+  const { wishlist, loading, loadWishlist, removeFromWishlist } = useWishlistStore();
   const { products, fetchProducts } = useProductStore();
   const { addToCart } = useCartStore();
   const { currentUser } = useAuthStore();
@@ -39,16 +40,11 @@ export default function Wishlist() {
 
   useEffect(() => {
     if (wishlist.length > 0 && products.length > 0) {
-      // More efficient: only fetch products that are in wishlist
-      const wishlistProductPromises = wishlist.map(productId => 
-        fetchProducts().then(allProducts => 
-          allProducts.find(p => p.id === productId)
-        ).filter(Boolean)
+      // Filter products that are in wishlist
+      const filteredProducts = products.filter(product => 
+        wishlist.includes(product.id)
       );
-      
-      Promise.all(wishlistProductPromises).then(products => {
-        setWishlistProducts(products.filter(Boolean));
-      });
+      setWishlistProducts(filteredProducts);
     } else {
       setWishlistProducts([]);
     }

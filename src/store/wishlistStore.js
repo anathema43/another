@@ -14,50 +14,10 @@ export const useWishlistStore = create(
 
       // Real-time wishlist synchronization
       subscribeToWishlist: () => {
+        if (!db) return () => {};
+        
         const { currentUser } = useAuthStore.getState();
-        if (!currentUser) return;
-
-        const { unsubscribe: currentUnsub } = get();
-        if (currentUnsub) {
-          currentUnsub();
-        }
-
-        const unsubscribe = onSnapshot(
-          doc(db, "wishlists", currentUser.uid),
-          (doc) => {
-            if (doc.exists()) {
-              set({ 
-                wishlist: doc.data().productIds || [], 
-                loading: false,
-                error: null 
-              });
-            } else {
-              set({ wishlist: [], loading: false });
-            }
-          },
-          (error) => {
-            console.error("Error listening to wishlist changes:", error);
-            set({ error: error.message, loading: false });
-          }
-        );
-
-        set({ unsubscribe });
-        return unsubscribe;
-      },
-
-      unsubscribeFromWishlist: () => {
-        const { unsubscribe } = get();
-        if (unsubscribe) {
-          unsubscribe();
-          set({ unsubscribe: null });
-        }
-      },
-      unsubscribe: null,
-
-      // Real-time wishlist synchronization
-      subscribeToWishlist: () => {
-        const { currentUser } = useAuthStore.getState();
-        if (!currentUser) return;
+        if (!currentUser) return () => {};
 
         const { unsubscribe: currentUnsub } = get();
         if (currentUnsub) {
@@ -107,9 +67,6 @@ export const useWishlistStore = create(
           } else {
             set({ loading: false });
           }
-          
-          // Start real-time subscription
-          get().subscribeToWishlist();
           
           // Start real-time subscription
           get().subscribeToWishlist();

@@ -98,22 +98,22 @@ export default function Cart() {
                 Total Items: {cart.reduce((sum, item) => sum + item.quantity, 0)}
               </p>
               <p className="text-2xl font-bold text-organic-text">
-                Total: {formatCurrency(getTotalPrice())}
+                Total: {formatCurrency(getGrandTotal())}
               </p>
             </div>
             <div className="flex gap-3">
               <Link
                 to="/shop"
-                className="btn-secondary px-6 py-3 rounded-lg font-semibold"
+                className="border border-organic-primary text-organic-primary px-6 py-3 rounded-lg hover:bg-organic-primary hover:text-white transition-all font-semibold"
               >
                 Continue Shopping
               </Link>
-              <button
-                onClick={() => navigate("/checkout")}
-                className="btn-primary px-8 py-3 rounded-lg font-semibold"
+              <Link
+                to="/checkout"
+                className="bg-organic-primary text-white px-8 py-3 rounded-lg hover:opacity-90 transition-all font-semibold"
               >
                 Proceed to Checkout
-              </button>
+              </Link>
             </div>
           </div>
           
