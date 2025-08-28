@@ -76,7 +76,7 @@ class EmailService {
         to: orderData.userEmail,
         subject,
         data: {
-          customerName: orderData.shipping?.firstName || orderData.userEmail || 'Customer',
+          customerName: orderData.shippingInfo?.firstName || orderData.shipping?.firstName || orderData.userEmail || 'Customer',
           orderNumber: orderData.orderNumber,
           status: newStatus,
           trackingNumber: orderData.trackingNumber,

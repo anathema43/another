@@ -97,7 +97,7 @@ export default function Checkout() {
         paymentStatus: "pending"
       };
 
-      if (formData.paymentMethod === 'card') {
+      if (formData.paymentMethod === 'razorpay') {
         // Proceed to Razorpay payment
         setPaymentStep(true);
       } else {
@@ -334,12 +334,12 @@ export default function Checkout() {
                       <input
                         type="radio"
                         name="paymentMethod" 
-                        value="razorpay"
-                        checked={formData.paymentMethod === 'razorpay'}
+                        value="card"
+                        checked={formData.paymentMethod === 'card'}
                         onChange={handleInputChange}
                         className="mr-2"
                       />
-                      Razorpay (Cards, UPI, Net Banking, Wallets)
+                      Credit/Debit Card, UPI, Net Banking, Wallets (via Razorpay)
                     </label>
                   </div>
                 </div>

@@ -89,8 +89,8 @@ export default function Stories() {
   };
 
   const handleAddStory = () => {
-    setEditingStory(null);
-    setShowStoryEditor(true);
+    // Redirect to admin panel for story management
+    window.location.href = '/#/admin';
   };
 
   const handleCloseEditor = () => {

@@ -662,6 +662,91 @@ export default function Admin() {
               </div>
             )}
 
+            {/* Stories Tab */}
+            {activeTab === 'stories' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold text-organic-text">Story Management</h2>
+                  <button
+                    onClick={() => setShowStoryModal(true)}
+                    className="flex items-center gap-2 bg-organic-primary text-white px-4 py-2 rounded-lg hover:opacity-90"
+                  >
+                    <PlusIcon className="w-4 h-4" />
+                    Add Story
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Story</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Author</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {displayStories.map(story => (
+                          <tr key={story.id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-3">
+                                <img 
+                                  src={story.featuredImage} 
+                                  alt={story.title}
+                                  className="w-12 h-12 object-cover rounded"
+                                />
+                                <div>
+                                  <p className="font-medium text-organic-text">{story.title}</p>
+                                  <p className="text-sm text-gray-600">{story.readTime}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className="text-organic-text">{story.author}</span>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className="capitalize text-organic-text">{story.category?.replace('-', ' ')}</span>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-2">
+                                {story.featured && (
+                                  <span className="bg-organic-primary text-white px-2 py-1 text-xs rounded-full">
+                                    Featured
+                                  </span>
+                                )}
+                                <span className="text-sm text-gray-600">Published</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => handleEditStory(story)}
+                                  className="text-blue-600 hover:text-blue-800"
+                                  title="Edit Story"
+                                >
+                                  <PencilIcon className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteStory(story.id)}
+                                  className="text-red-600 hover:text-red-800"
+                                  title="Delete Story"
+                                >
+                                  <TrashIcon className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Analytics Tab */}
             {activeTab === 'analytics' && (
               <div className="space-y-8">
