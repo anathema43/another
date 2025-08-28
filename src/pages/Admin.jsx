@@ -40,16 +40,21 @@ export default function Admin() {
   const [editingProduct, setEditingProduct] = useState(null);
   const [editingArtisan, setEditingArtisan] = useState(null);
   const [editingStory, setEditingStory] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
   const [stories, setStories] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [productManagementView, setProductManagementView] = useState('manage'); // 'add' or 'manage'
 
   // Use data from appropriate stores
   const displayProducts = products.length > 0 ? products : [];
   const displayOrders = orderStoreOrders.length > 0 ? orderStoreOrders : [];
   const displayArtisans = artisanStoreArtisans.length > 0 ? artisanStoreArtisans : [];
   const displayStories = stories.length > 0 ? stories : [];
+  const displayCategories = categories.length > 0 ? categories : [];
 
   useEffect(() => {
     // Fetch data when component mounts
@@ -59,6 +64,7 @@ export default function Admin() {
         await fetchOrdersFromStore();
         await fetchArtisansFromStore();
         await fetchStories();
+        await fetchCategories();
       } catch (error) {
         console.error('Error loading admin data:', error);
       }
@@ -66,6 +72,41 @@ export default function Admin() {
 
     loadData();
   }, [fetchProducts, fetchOrdersFromStore, fetchArtisansFromStore]);
+
+  // Fetch categories
+  const fetchCategories = async () => {
+    try {
+      if (!db) {
+        // Use demo categories
+        const demoCategories = [
+          {
+            id: 'demo-category-1',
+            name: 'Pickles & Preserves',
+            description: 'Traditional pickles and preserved foods from the hills',
+            imageUrl: 'https://images.pexels.com/photos/4198017/pexels-photo-4198017.jpeg?auto=compress&cs=tinysrgb&w=800'
+          },
+          {
+            id: 'demo-category-2',
+            name: 'Wild Honey',
+            description: 'Pure, raw honey collected from high-altitude forests',
+            imageUrl: 'https://images.pexels.com/photos/1638280/pexels-photo-1638280.jpeg?auto=compress&cs=tinysrgb&w=800'
+          }
+        ];
+        setCategories(demoCategories);
+        return;
+      }
+      
+      const { collection, getDocs } = await import('firebase/firestore');
+      const querySnapshot = await getDocs(collection(db, 'categories'));
+      const categoriesData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   // Fetch stories
   const fetchStories = async () => {
@@ -154,6 +195,11 @@ export default function Admin() {
     setShowStoryModal(true);
   };
 
+  const handleEditCategory = (category) => {
+    setEditingCategory(category);
+    setShowCategoryModal(true);
+  };
+
   const handleDeleteProduct = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
@@ -193,6 +239,22 @@ export default function Admin() {
     }
   };
 
+  const handleDeleteCategory = async (categoryId) => {
+    if (window.confirm('Are you sure you want to delete this category?')) {
+      try {
+        if (!db) {
+          console.warn('Firebase not configured - cannot delete category');
+          return;
+        }
+        const { deleteDoc, doc } = await import('firebase/firestore');
+        await deleteDoc(doc(db, 'categories', categoryId));
+        await fetchCategories(); // Refresh categories list
+      } catch (error) {
+        alert('Error deleting category: ' + error.message);
+      }
+    }
+  };
+
   const handleUpdateOrderStatus = async (orderId, newStatus) => {
     try {
       await updateOrderStatusInStore(orderId, newStatus);
@@ -205,9 +267,11 @@ export default function Admin() {
     setShowProductModal(false);
     setShowArtisanModal(false);
     setShowStoryModal(false);
+    setShowCategoryModal(false);
     setEditingProduct(null);
     setEditingArtisan(null);
     setEditingStory(null);
+    setEditingCategory(null);
   };
 
   const handleModalSave = () => {
@@ -216,6 +280,7 @@ export default function Admin() {
     fetchProducts();
     fetchArtisansFromStore();
     fetchStories();
+    fetchCategories();
   };
 
   return (
@@ -241,6 +306,7 @@ export default function Admin() {
                 { id: 'products', label: 'Products', icon: ShoppingBagIcon },
                 { id: 'orders', label: 'Orders', icon: CurrencyDollarIcon },
                 { id: 'artisans', label: 'Artisans', icon: UsersIcon },
+                { id: 'categories', label: 'Categories', icon: ChartBarIcon },
                 { id: 'stories', label: 'Stories', icon: ChartBarIcon },
                 { id: 'analytics', label: 'Analytics', icon: ChartBarIcon },
                 { id: 'settings', label: 'Settings', icon: Cog6ToothIcon }
@@ -346,116 +412,207 @@ export default function Admin() {
             {/* Products Tab */}
             {activeTab === 'products' && (
               <div className="space-y-6">
-                <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-                  <h2 className="text-xl font-semibold text-organic-text">Product Management</h2>
-                  <div className="flex gap-2">
+                {/* Product Management Tabs */}
+                <div className="border-b">
+                  <nav className="flex space-x-8">
                     <button
-                      onClick={() => setShowProductModal(true)}
-                      className="flex items-center gap-2 bg-organic-primary text-white px-4 py-2 rounded-lg hover:opacity-90"
+                      onClick={() => setProductManagementView('add')}
+                      className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                        productManagementView === 'add'
+                          ? 'border-organic-primary text-organic-primary'
+                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
                     >
-                      <PlusIcon className="w-4 h-4" />
-                      Add Single Product
+                      Add New Product
                     </button>
-                  </div>
+                    <button
+                      onClick={() => setProductManagementView('manage')}
+                      className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                        productManagementView === 'manage'
+                          ? 'border-organic-primary text-organic-primary'
+                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
+                    >
+                      Manage Existing Products
+                    </button>
+                  </nav>
                 </div>
 
-                {/* Search and Filter */}
-                <div className="flex gap-4">
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-organic-primary"
-                  />
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-organic-primary"
-                  >
-                    <option value="all">All Categories</option>
-                    {categories.map(category => (
-                      <option key={category} value={category} className="capitalize">
-                        {category}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="text-sm text-gray-600 flex items-center">
-                    {filteredProducts.length} of {displayProducts.length} products
+                {/* Add New Product Panel */}
+                {productManagementView === 'add' && (
+                  <div className="space-y-6">
+                    <div className="text-center py-12 bg-gray-50 rounded-lg">
+                      <div className="w-16 h-16 bg-organic-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <PlusIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-organic-text mb-2">Add New Product</h3>
+                      <p className="text-organic-text opacity-75 mb-6">Create a new product listing for your store</p>
+                      <button
+                        onClick={() => setShowProductModal(true)}
+                        className="bg-organic-primary text-white px-6 py-3 rounded-lg hover:opacity-90 font-semibold"
+                      >
+                        Create New Product
+                      </button>
+                    </div>
+                    
+                    {/* Bulk Upload */}
+                    <BulkProductUpload onUploadComplete={() => fetchProducts()} />
                   </div>
-                </div>
+                )}
 
-                {/* Bulk Upload */}
-                <BulkProductUpload onUploadComplete={() => fetchProducts()} />
+                {/* Manage Existing Products Panel */}
+                {productManagementView === 'manage' && (
+                  <div className="space-y-6">
+                    <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                      <h2 className="text-xl font-semibold text-organic-text">Manage Existing Products</h2>
+                      <div className="text-sm text-gray-600">
+                        {filteredProducts.length} of {displayProducts.length} products
+                      </div>
+                    </div>
 
-                {/* Products Table */}
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {filteredProducts.map(product => (
-                          <tr key={product.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                <img 
-                                  src={product.image} 
-                                  alt={product.name}
-                                  className="w-12 h-12 object-cover rounded"
-                                />
-                                <div>
-                                  <p className="font-medium text-organic-text">{product.name}</p>
-                                  <p className="text-sm text-gray-600">{product.sku || 'No SKU'}</p>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4">
-                              <span className="capitalize text-organic-text">{product.category}</span>
-                            </td>
-                            <td className="px-6 py-4">
-                              <span className="font-semibold text-organic-text">{formatCurrency(product.price)}</span>
-                            </td>
-                            <td className="px-6 py-4">
-                              <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                                product.quantityAvailable > 10 ? 'bg-green-100 text-green-800' :
-                                product.quantityAvailable > 5 ? 'bg-yellow-100 text-yellow-800' :
-                                product.quantityAvailable > 0 ? 'bg-orange-100 text-orange-800' :
-                                'bg-red-100 text-red-800'
-                              }`}>
-                                {product.quantityAvailable || 0}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-2">
-                                <button
-                                  onClick={() => handleEditProduct(product)}
-                                  className="text-blue-600 hover:text-blue-800"
-                                  title="Edit Product"
-                                >
-                                  <PencilIcon className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteProduct(product.id)}
-                                  className="text-red-600 hover:text-red-800"
-                                  title="Delete Product"
-                                >
-                                  <TrashIcon className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
+                    {/* Search and Filter */}
+                    <div className="flex gap-4">
+                      <input
+                        type="text"
+                        placeholder="Search products..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-organic-primary"
+                      />
+                      <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-organic-primary"
+                      >
+                        <option value="all">All Categories</option>
+                        {categories.map(category => (
+                          <option key={category} value={category} className="capitalize">
+                            {category}
+                          </option>
                         ))}
-                      </tbody>
-                    </table>
+                      </select>
+                    </div>
+
+                    {/* Products Table */}
+                    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-200">
+                            {filteredProducts.map(product => (
+                              <tr key={product.id} className="hover:bg-gray-50">
+                                <td className="px-6 py-4">
+                                  <div className="flex items-center gap-3">
+                                    <img 
+                                      src={product.image} 
+                                      alt={product.name}
+                                      className="w-12 h-12 object-cover rounded"
+                                    />
+                                    <div>
+                                      <p className="font-medium text-organic-text">{product.name}</p>
+                                      <p className="text-sm text-gray-600">{product.sku || 'No SKU'}</p>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-6 py-4">
+                                  <span className="capitalize text-organic-text">{product.category}</span>
+                                </td>
+                                <td className="px-6 py-4">
+                                  <span className="font-semibold text-organic-text">{formatCurrency(product.price)}</span>
+                                </td>
+                                <td className="px-6 py-4">
+                                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                                    product.quantityAvailable > 10 ? 'bg-green-100 text-green-800' :
+                                    product.quantityAvailable > 5 ? 'bg-yellow-100 text-yellow-800' :
+                                    product.quantityAvailable > 0 ? 'bg-orange-100 text-orange-800' :
+                                    'bg-red-100 text-red-800'
+                                  }`}>
+                                    {product.quantityAvailable || 0}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4">
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      onClick={() => handleEditProduct(product)}
+                                      className="text-blue-600 hover:text-blue-800"
+                                      title="Edit Product"
+                                    >
+                                      <PencilIcon className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteProduct(product.id)}
+                                      className="text-red-600 hover:text-red-800"
+                                      title="Delete Product"
+                                    >
+                                      <TrashIcon className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
+                )}
+              </div>
+            )}
+
+            {/* Categories Tab */}
+            {activeTab === 'categories' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold text-organic-text">Category Management</h2>
+                  <button
+                    onClick={() => setShowCategoryModal(true)}
+                    className="flex items-center gap-2 bg-organic-primary text-white px-4 py-2 rounded-lg hover:opacity-90"
+                  >
+                    <PlusIcon className="w-4 h-4" />
+                    Add Category
+                  </button>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {displayCategories.map(category => (
+                    <div key={category.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                      <img 
+                        src={category.imageUrl} 
+                        alt={category.name}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h3 className="font-semibold text-organic-text">{category.name}</h3>
+                            <p className="text-sm text-gray-600 mt-1">{category.description}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-3">
+                          <button
+                            onClick={() => handleEditCategory(category)}
+                            className="flex-1 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteCategory(category.id)}
+                            className="flex-1 text-red-600 hover:text-red-800 text-sm font-medium"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -787,6 +944,14 @@ export default function Admin() {
       {showStoryModal && (
         <StoryEditor
           story={editingStory}
+          onClose={handleModalClose}
+          onSave={handleModalSave}
+        />
+      )}
+
+      {showCategoryModal && (
+        <CategoryFormModal
+          category={editingCategory}
           onClose={handleModalClose}
           onSave={handleModalSave}
         />
