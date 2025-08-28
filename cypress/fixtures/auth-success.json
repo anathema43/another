@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "user": {
+    "uid": "test-user-123",
+    "email": "test@ramro.com",
+    "displayName": "Test User",
+    "role": "customer"
+  },
+  "token": "mock-jwt-token-123"
+}

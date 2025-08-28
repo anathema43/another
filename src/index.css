@@ -1,0 +1,184 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Nunito+Sans:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties for Organic Color System */
+:root {
+  --organic-background: #F5F1ED;
+  --organic-primary: #D9734E;
+  --organic-text: #4A403A;
+  --organic-highlight: #3E5954;
+  --organic-white: #FFFFFF;
+  
+  /* Nyano Brand Colors */
+  --nyano-cream: #F5F1ED;
+  --nyano-terracotta: #D9734E;
+  --nyano-forest: #3E5954;
+  --nyano-brown: #4A403A;
+  --nyano-marigold: #F2B705;
+}
+
+@layer base {
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--nyano-cream);
+    color: var(--nyano-brown);
+    min-height: 100vh;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--organic-background);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--organic-primary);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--organic-text);
+  }
+
+  /* Organic button styles */
+  .btn-primary {
+    @apply bg-organic-primary text-organic-white font-semibold px-6 py-3 rounded-lg hover:shadow-lg transition-all duration-200 hover:opacity-90;
+  }
+  
+  .btn-secondary {
+    @apply border border-organic-text text-organic-text font-semibold px-6 py-3 rounded-lg hover:bg-organic-text hover:text-organic-white transition-all duration-200 bg-transparent;
+  }
+
+  /* Card hover effects */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  /* Organic highlight text */
+  .text-highlight {
+    @apply text-organic-highlight font-medium;
+  }
+
+  /* Loading animation */
+  .loading-spinner {
+    @apply animate-spin rounded-full h-8 w-8 border-b-2 border-organic-primary;
+  }
+
+  /* Text truncation utilities */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Focus states for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-organic-primary focus:ring-offset-2;
+  }
+}
+
+@layer utilities {
+  /* Animation delays */
+  .animate-delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .animate-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animate-delay-300 {
+    animation-delay: 0.3s;
+  }
+  
+  .animate-delay-400 {
+    animation-delay: 0.4s;
+  }
+
+  /* Creative animations for hero text */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 5px rgba(242, 183, 5, 0.3);
+    }
+    to {
+      box-shadow: 0 0 20px rgba(242, 183, 5, 0.6), 0 0 30px rgba(242, 183, 5, 0.4);
+    }
+  }
+
+  /* Backdrop blur utilities */
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+  
+  /* Hide scrollbar for horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Ensure horizontal scroll works properly */
+  .min-w-max {
+    min-width: max-content;
+  }
+
+  /* Smooth swipe animations */
+  .swipe-container {
+    touch-action: pan-y pinch-zoom;
+  }
+  
+  .swipe-item {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  /* Enhanced loading animation */
+  @keyframes shimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    100% {
+      background-position: 468px 0;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 1.5s ease-in-out infinite;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 400% 100%;
+  }
+}

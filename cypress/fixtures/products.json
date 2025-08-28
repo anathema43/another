@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "name": "Darjeeling Pickle",
+    "description": "Authentic spicy pickle from the hills of Darjeeling",
+    "price": 299,
+    "image": "https://example.com/pickle.jpg",
+    "quantityAvailable": 10,
+    "category": "pickle",
+    "rating": 4.5
+  },
+  {
+    "id": "2",
+    "name": "Himalayan Wild Honey",
+    "description": "Pure organic honey from high-altitude forests",
+    "price": 499,
+    "image": "https://example.com/honey.jpg",
+    "quantityAvailable": 7,
+    "category": "honey",
+    "rating": 5.0
+  },
+  {
+    "id": "3",
+    "name": "Organic Red Rice",
+    "description": "Nutrient-rich red rice from Himalayan valleys",
+    "price": 450,
+    "image": "https://example.com/rice.jpg",
+    "quantityAvailable": 15,
+    "category": "grains",
+    "rating": 4.8
+  }
+]

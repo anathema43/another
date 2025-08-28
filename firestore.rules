@@ -1,0 +1,95 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is admin (server-side verification)
+    function isAdmin() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Helper function to validate user data
+    function isValidUserData() {
+      return request.resource.data.keys().hasAll(['email', 'displayName', 'role']) &&
+        request.resource.data.email is string &&
+        request.resource.data.displayName is string &&
+        request.resource.data.role in ['customer', 'admin'];
+    }
+    
+    // Users can read and write their own user document
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId) && isValidUserData();
+      allow create: if isAuthenticated() && 
+        request.auth.uid == userId && 
+        isValidUserData();
+    }
+    
+    // Products are readable by all, writable only by admins
+    match /products/{productId} {
+      allow read: if true;
+      allow write, create, delete: if isAdmin();
+    }
+    
+    // Orders are readable/writable by the user who created them, readable by admins
+    match /orders/{orderId} {
+      allow read: if isOwner(resource.data.userId) || isAdmin();
+      allow write: if isOwner(resource.data.userId);
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.keys().hasAll(['items', 'total', 'status']);
+      allow update: if isAdmin(); // Admins can update order status
+    }
+    
+    // Carts are readable/writable by the user who owns them
+    match /carts/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Wishlists are readable/writable by the user who owns them
+    match /wishlists/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Reviews are readable by all, writable by authenticated users
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.keys().hasAll(['productId', 'rating', 'comment']);
+      allow update, delete: if isAuthenticated() && 
+        request.auth.uid == resource.data.userId;
+    }
+    
+    // Artisans are readable by all, writable only by admins
+    match /artisans/{artisanId} {
+      allow read: if true;
+      allow write, create, delete: if isAdmin();
+    }
+    
+    // Admin-only collections with strict validation
+    match /admin/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Inventory logs - admin only
+    match /inventory_logs/{logId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Analytics data - admin only
+    match /analytics/{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

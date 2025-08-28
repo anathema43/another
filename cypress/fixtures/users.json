@@ -1,0 +1,25 @@
+{
+  "testUser": {
+    "email": "test@ramro.com",
+    "password": "testpassword123",
+    "name": "Test User",
+    "phone": "+91 9876543210",
+    "address": {
+      "street": "123 Test Street",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "zipCode": "400001",
+      "country": "India"
+    }
+  },
+  "adminUser": {
+    "email": "admin@ramro.com",
+    "password": "adminpassword123",
+    "name": "Admin User",
+    "role": "admin"
+  },
+  "invalidUser": {
+    "email": "invalid@email.com",
+    "password": "wrongpassword"
+  }
+}

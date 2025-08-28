@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "orderId": "ORD-2024-001",
+  "orderNumber": "ORD-2024-001",
+  "total": 1299,
+  "status": "processing",
+  "paymentStatus": "completed",
+  "items": [
+    {
+      "id": "1",
+      "name": "Darjeeling Pickle",
+      "quantity": 2,
+      "price": 299
+    },
+    {
+      "id": "2",
+      "name": "Himalayan Wild Honey",
+      "quantity": 1,
+      "price": 499
+    }
+  ],
+  "shipping": {
+    "firstName": "Test",
+    "lastName": "User",
+    "address": "123 Test Street",
+    "city": "Mumbai",
+    "zipCode": "400001"
+  },
+  "createdAt": "2024-01-15T10:30:00Z"
+}
