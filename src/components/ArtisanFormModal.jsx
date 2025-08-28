@@ -216,7 +216,7 @@ export default function ArtisanFormModal({ artisan, onClose, onSave }) {
             <ImageUpload
               onImageUploaded={handleImageUpload}
               currentImage={formData.profileImage}
-              folder="ramro/artisans"
+             folder="darjeelingsouls/products/artisan_images"
             />
           </div>
 

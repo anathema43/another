@@ -194,7 +194,7 @@ export default function StoryEditor({ story, onClose, onSave }) {
             <ImageUpload
               currentImage={formData.featuredImage}
               onImageUploaded={(imageData) => handleImageUpload('featuredImage', imageData)}
-              folder="darjeeling/stories"
+             folder="darjeelingsouls/products/story_images"
             />
           </div>
 
@@ -207,7 +207,7 @@ export default function StoryEditor({ story, onClose, onSave }) {
               <ImageUpload
                 currentImage={formData.authorImage}
                 onImageUploaded={(imageData) => handleImageUpload('authorImage', imageData)}
-                folder="darjeeling/authors"
+               folder="darjeelingsouls/products/author_images"
               />
             </div>
             <div>
