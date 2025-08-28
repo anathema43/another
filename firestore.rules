@@ -88,6 +88,12 @@ service cloud.firestore {
       allow read, write: if isOwner(userId);
     }
     
+    // Stories are readable by all, writable only by admins
+    match /stories/{storyId} {
+      allow read: if true;
+      allow write, create, delete: if isAdmin();
+    }
+    
     // Admin-only collections with strict validation
     match /admin/{document=**} {
       allow read, write: if isAdmin();
