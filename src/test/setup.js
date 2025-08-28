@@ -18,6 +18,22 @@ const mockFirebase = {
   },
 };
 
+// Mock Firebase Firestore with testing utilities
+vi.mock('firebase/firestore', async (importOriginal) => {
+  const original = await importOriginal();
+  return {
+    ...original,
+    // Mock testing utilities
+    clearFirestoreData: vi.fn(() => Promise.resolve()),
+    enableNetwork: vi.fn(() => Promise.resolve()),
+    disableNetwork: vi.fn(() => {
+      const error = new Error("Network unavailable for test");
+      error.code = "unavailable";
+      return Promise.reject(error);
+    }),
+  };
+});
+
 // Mock Razorpay
 global.Razorpay = vi.fn(() => ({
   open: vi.fn(),

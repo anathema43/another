@@ -50,7 +50,6 @@ describe('Firestore Connectivity Tests', () => {
   })
 
   beforeEach(async () => {
-    // Clear test data before each test
     try {
       await clearFirestoreData({ projectId: 'test-project-id' })
     } catch (error) {
