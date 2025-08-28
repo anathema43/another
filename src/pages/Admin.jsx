@@ -12,7 +12,7 @@ import AdminSeedButton from "../components/AdminSeedButton";
 import ArtisanSeedButton from "../components/ArtisanSeedButton";
 import AdminAlgoliaSync from "../components/AdminAlgoliaSync";
 import BulkProductUpload from "../components/BulkProductUpload";
-import AnalyticsDashboard from "../components/AnalyticsDashboard";
+import AdvancedAnalytics from "../components/AdvancedAnalytics";
 import LoadingButton from "../components/LoadingButton";
 import SuccessMessage from "../components/SuccessMessage";
 import formatCurrency from "../utils/formatCurrency";
@@ -252,6 +252,7 @@ export default function Admin() {
             { id: 'dashboard', label: '📊 Dashboard', icon: ChartBarIcon },
             { id: 'products', label: '📦 Products', icon: null },
             { id: 'orders', label: '📋 Orders', icon: null },
+            { id: 'analytics', label: '📈 Analytics', icon: ChartBarIcon },
             { id: 'customers', label: '👥 Customers', icon: UserGroupIcon },
             { id: 'content', label: '📝 Content', icon: DocumentTextIcon },
             { id: 'settings', label: '⚙️ Settings', icon: Cog6ToothIcon }
@@ -358,7 +359,21 @@ export default function Admin() {
             <AdminAlgoliaSync />
 
             {/* Analytics Dashboard */}
-            <AnalyticsDashboard />
+            <AdvancedAnalytics />
+          </div>
+        )}
+
+        {/* Analytics Tab */}
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-organic-text">Advanced Analytics & Reporting</h2>
+              <div className="text-sm text-gray-600">
+                Comprehensive business intelligence and insights
+              </div>
+            </div>
+            
+            <AdvancedAnalytics />
           </div>
         )}
 
