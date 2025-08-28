@@ -123,7 +123,10 @@ describe('Cart Persistence E2E Tests', () => {
 
   describe('Cart Calculations', () => {
     it('should calculate totals correctly in UI', () => {
-      // Add known products to cart
+      const subtotal = 500;
+      const tax = subtotal * 0.08; // 8% tax
+      const shipping = subtotal >= 500 ? 0 : 50; // Free shipping over ₹500
+      const total = subtotal + tax + shipping;
       cy.visit('/shop');
       cy.get('[data-cy="product-card"]').first().within(() => {
         cy.get('[data-cy="add-to-cart-button"]').click();

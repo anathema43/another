@@ -274,7 +274,7 @@ export default function Stories() {
                 className="flex items-center gap-2 bg-organic-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-all"
               >
                 <PlusIcon className="w-4 h-4" />
-                Add Story
+                Manage Stories (Admin Panel)
               </button>
             )}
           </div>

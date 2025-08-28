@@ -184,7 +184,10 @@ describe('Cart Persistence Tests', () => {
       addToCart({ id: '1', name: 'Product 1', price: 100 }, 2); // 200
       addToCart({ id: '2', name: 'Product 2', price: 300 }, 1); // 300
       
-      expect(getSubtotal()).toBe(500);
+      expect(getSubtotal()).toBe(500); // (150 * 2) + (200 * 1) = 500
+      expect(getTax()).toBe(40); // 8% of 500 = 40
+      expect(getShipping()).toBe(0); // Free shipping over ₹500
+      expect(getGrandTotal()).toBe(540); // 500 + 40 + 0 = 540
       expect(getTax()).toBe(40); // 8% of 500
       expect(getShipping()).toBe(0); // Free shipping over 500
       expect(getGrandTotal()).toBe(540); // 500 + 40 + 0

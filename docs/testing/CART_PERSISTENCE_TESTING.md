@@ -13,6 +13,9 @@ This guide covers comprehensive testing for cart persistence functionality, ensu
 - User A's cart items don't appear for User B
 - When User A signs back in, their cart is restored
 - Cart data is properly isolated in Firebase
+- Tax calculation: 8% of subtotal
+- Shipping calculation: Free over ₹500, otherwise ₹50
+- Grand total: subtotal + tax + shipping
 
 ### **Real-time Synchronization Testing**
 - Cart updates sync across browser tabs instantly

@@ -99,7 +99,7 @@ describe('Checkout Button Tests', () => {
       
       const subtotal = 400;
       const tax = 400 * 0.08; // 32
-      const shipping = 50; // Under ₹500 threshold
+      const shipping = 50; // Under ₹500 threshold  
       const expectedTotal = subtotal + tax + shipping; // 482
       
       expect(getGrandTotal()).toBe(expectedTotal);

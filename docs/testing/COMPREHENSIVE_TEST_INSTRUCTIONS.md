@@ -136,7 +136,8 @@ cy.url().should('include', '/stories/');
 **What it tests:**
 - Guest vs authenticated checkout
 - Shipping information validation
-- Payment method selection
+- Razorpay payment integration
+- Order total calculations (subtotal, tax, shipping)
 - Order total calculations
 - Order completion flow
 

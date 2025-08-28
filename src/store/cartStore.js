@@ -154,16 +154,16 @@ export const useCartStore = create(
       },
 
       getSubtotal: () => {
-        return get().getTotalPrice();
+        return get().cart.reduce((total, item) => total + (item.price * item.quantity), 0);
       },
 
       getTax: () => {
-        return get().getTotalPrice() * 0.08; // 8% tax
+        return get().getSubtotal() * 0.08; // 8% tax
       },
 
       getShipping: () => {
-        const total = get().getTotalPrice();
-        return total > 500 ? 0 : 50; // Free shipping over ₹500
+        const subtotal = get().getSubtotal();
+        return subtotal >= 500 ? 0 : 50; // Free shipping over ₹500
       },
 
       getGrandTotal: () => {

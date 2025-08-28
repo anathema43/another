@@ -17,6 +17,8 @@ This guide covers comprehensive testing for checkout button functionality, ensur
 ### **Cart State Integration Testing**
 - Button responds to cart changes
 - Total calculations are accurate
+- Tax calculations (8% of subtotal)
+- Shipping calculations (free over ₹500)
 - Button updates when items added/removed
 - Proper integration with cart store
 

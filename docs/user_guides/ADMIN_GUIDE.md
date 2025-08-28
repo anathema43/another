@@ -178,6 +178,56 @@ New Order → Processing → Shipped → Delivered
 
 #### **Adding Artisan Profiles**
 
+## 📖 **Story Management**
+
+### **Story Management Tab Features**
+
+#### **Story Content System**
+- **Story Table**: Visual story cards with titles, authors, and categories
+- **Featured Stories**: Highlight important stories on homepage
+- **Quick Actions**: Edit stories, manage featured status, delete content
+- **Category Management**: Organize stories by type and topic
+
+#### **Adding New Stories**
+
+1. **Click "Add Story"** in Stories tab
+2. **Fill Story Information**:
+   ```
+   Required Fields:
+   - Story Title: "The Ancient Art of Darjeeling Pickle Making"
+   - Author: "Deepak Sharma" (artisan name)
+   - Category: Select from dropdown (artisan-story, traditions, etc.)
+   - Content: Full story text with formatting
+   
+   Optional Fields:
+   - Featured Image: Main story image
+   - Author Image: Photo of the storyteller
+   - Author Bio: Brief author description
+   - Tags: Comma-separated keywords
+   - Featured Status: Highlight on homepage
+   ```
+
+3. **Upload Images** using integrated image management
+4. **Set Featured Status** for homepage display
+5. **Publish Story** to make it live immediately
+
+#### **Story Categories**
+- `artisan-story` - Personal artisan narratives
+- `traditions` - Cultural heritage and customs
+- `events` - Community events and festivals
+- `food-culture` - Culinary traditions and recipes
+- `sustainability` - Environmental and farming practices
+- `community` - Community impact stories
+
+#### **Content Management Best Practices**
+1. **Authentic Stories**: Focus on real artisan experiences
+2. **Cultural Sensitivity**: Respect traditions and customs
+3. **Regular Updates**: Publish weekly stories for engagement
+4. **Visual Quality**: Use high-resolution, relevant images
+5. **SEO Optimization**: Include relevant tags and descriptions
+
+---
+
 1. **Click "Add New Artisan"** in Artisans tab
 2. **Fill Comprehensive Profile**:
    ```

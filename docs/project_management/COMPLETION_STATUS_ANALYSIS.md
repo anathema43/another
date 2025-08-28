@@ -53,6 +53,9 @@
 - User accounts with comprehensive order history
 - Real-time shopping cart synchronization across browser tabs
 - Multi-step checkout process with shipping management
+- Razorpay payment integration (frontend complete)
+- Tax calculation (8% of subtotal)
+- Shipping calculation (free over ₹500, ₹50 under)
 - Wishlist functionality with real-time updates
 - Product reviews and ratings system
 - Inventory management with automated alerts

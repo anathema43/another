@@ -36,7 +36,7 @@ class EmailService {
           tax: orderData.tax,
           shipping: orderData.shippingCost,
           total: orderData.total,
-          shippingAddress: orderData.shipping
+          shippingAddress: orderData.shippingInfo || orderData.shipping
         }
       };
 
@@ -76,7 +76,7 @@ class EmailService {
         to: orderData.userEmail,
         subject,
         data: {
-          customerName: orderData.shippingInfo?.firstName || orderData.shipping?.firstName || orderData.userEmail || 'Customer',
+          customerName: orderData.shippingInfo?.firstName || orderData.shipping?.firstName || 'Customer',
           orderNumber: orderData.orderNumber,
           status: newStatus,
           trackingNumber: orderData.trackingNumber,
