@@ -53,12 +53,11 @@ if (isFirebaseConfigured) {
   console.warn('🔧 Firebase not configured - some features may not work');
 }
 
-export { auth, db, storage, functions };
+export { auth, db,  functions };
 
 // Enable offline persistence for Firestore
 import { enableNetwork, disableNetwork } from "firebase/firestore";
 
-export const enableOffline = () => disableNetwork(db);
-export const enableOnline = () => enableNetwork(db);
+const enableOffline = () => disableNetwork(db);
+const enableOnline = () => enableNetwork(db);
 
-export default app;

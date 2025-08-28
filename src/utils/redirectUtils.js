@@ -55,7 +55,7 @@ export const determineRedirectPath = (userProfile, savedRedirectPath) => {
  * @param {string} path - The path to validate
  * @returns {boolean} Whether the path is valid for redirect
  */
-export const isValidRedirectPath = (path) => {
+const isValidRedirectPath = (path) => {
   if (!path || typeof path !== 'string') {
     return false;
   }

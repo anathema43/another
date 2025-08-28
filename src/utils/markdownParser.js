@@ -1,5 +1,5 @@
 // Markdown Data Layer - Fetches and parses strategic documents
-export class MarkdownDataLayer {
+class MarkdownDataLayer {
   constructor() {
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutes

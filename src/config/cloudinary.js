@@ -16,7 +16,7 @@ if (!isCloudinaryConfigured) {
 }
 
 // Cloudinary transformation presets for different use cases
-export const transformations = {
+const transformations = {
   productThumbnail: 'c_fill,w_300,h_300,q_auto,f_auto',
   productMedium: 'c_fill,w_600,h_600,q_auto,f_auto',
   productLarge: 'c_fill,w_1200,h_1200,q_auto,f_auto',
@@ -24,14 +24,14 @@ export const transformations = {
 };
 
 // Generate Cloudinary URLs with transformations
-export const generateCloudinaryUrl = (publicId, transformation = 'productMedium') => {
+const generateCloudinaryUrl = (publicId, transformation = 'productMedium') => {
   if (!publicId || !cloudinaryConfig.cloudName) return null;
   
   return `https://res.cloudinary.com/${cloudinaryConfig.cloudName}/image/upload/${transformation}/${publicId}`;
 };
 
 // Generate responsive image URLs for different screen sizes
-export const generateResponsiveCloudinaryUrls = (publicId) => {
+const generateResponsiveCloudinaryUrls = (publicId) => {
   if (!publicId) return null;
   
   return {
@@ -43,4 +43,3 @@ export const generateResponsiveCloudinaryUrls = (publicId) => {
 };
 
 export { cloudinaryConfig, isCloudinaryConfigured };
-export default cloudinaryConfig;

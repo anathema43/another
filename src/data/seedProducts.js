@@ -265,4 +265,3 @@ export const seedProductsToFirestore = async () => {
   }
 };
 
-export default seedProducts;

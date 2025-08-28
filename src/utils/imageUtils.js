@@ -1,12 +1,12 @@
 // Image utility functions for responsive images
-export const IMAGE_SIZES = {
+const IMAGE_SIZES = {
   small: 400,    // Mobile phones
   medium: 800,   // Tablets
   large: 1200,   // Desktop
   xlarge: 1600   // Large screens
 };
 
-export const BREAKPOINTS = {
+const BREAKPOINTS = {
   mobile: '(max-width: 768px)',
   tablet: '(max-width: 1024px)', 
   desktop: '(max-width: 1440px)',
@@ -91,7 +91,7 @@ export const generateSizes = (customSizes = null) => {
 /**
  * Get optimal image size based on container width
  */
-export const getOptimalSize = (containerWidth) => {
+const getOptimalSize = (containerWidth) => {
   if (containerWidth <= 400) return 'small';
   if (containerWidth <= 800) return 'medium';
   if (containerWidth <= 1200) return 'large';
@@ -101,7 +101,7 @@ export const getOptimalSize = (containerWidth) => {
 /**
  * Preload critical images for better performance
  */
-export const preloadImage = (imageUrl, sizes = 'medium') => {
+const preloadImage = (imageUrl, sizes = 'medium') => {
   const link = document.createElement('link');
   link.rel = 'preload';
   link.as = 'image';
@@ -112,7 +112,7 @@ export const preloadImage = (imageUrl, sizes = 'medium') => {
 /**
  * Lazy load images with Intersection Observer
  */
-export const setupLazyLoading = () => {
+const setupLazyLoading = () => {
   const images = document.querySelectorAll('img[data-src]');
   
   const imageObserver = new IntersectionObserver((entries, observer) => {

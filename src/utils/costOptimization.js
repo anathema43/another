@@ -2,7 +2,7 @@
 // Implements immediate cost-saving measures
 
 // 1. Firebase Query Optimization
-export const optimizedQueries = {
+const optimizedQueries = {
   // Cache products locally to reduce Firestore reads
   getProductsWithCache: async () => {
     const CACHE_KEY = 'ramro_products_cache';
@@ -49,7 +49,7 @@ export const optimizedQueries = {
 };
 
 // 2. Image Optimization
-export const imageOptimization = {
+const imageOptimization = {
   // Compress images before upload
   compressImage: (file, quality = 0.7, maxWidth = 800) => {
     return new Promise((resolve) => {
@@ -91,7 +91,7 @@ export const imageOptimization = {
 };
 
 // 3. Bundle Optimization
-export const bundleOptimization = {
+const bundleOptimization = {
   // Code splitting for admin routes
   loadAdminModule: () => import('../pages/Admin'),
   loadOrdersModule: () => import('../pages/Orders'),
@@ -117,7 +117,7 @@ export const bundleOptimization = {
 };
 
 // 4. Error Tracking (Free Alternative to Sentry)
-export const freeErrorTracking = {
+const freeErrorTracking = {
   logError: (error, context = {}) => {
     const errorData = {
       message: error?.message || 'Unknown error message',
@@ -175,7 +175,7 @@ export const freeErrorTracking = {
 };
 
 // 5. Performance Monitoring
-export const performanceMonitoring = {
+const performanceMonitoring = {
   // Track Core Web Vitals
   trackWebVitals: () => {
     // Largest Contentful Paint
@@ -241,7 +241,7 @@ export const performanceMonitoring = {
 };
 
 // 6. Cost Monitoring Dashboard Data
-export const costDashboard = {
+const costDashboard = {
   getCurrentCosts: () => {
     const usage = JSON.parse(localStorage.getItem('firebase_usage') || '{}');
     const currentMonth = new Date().toISOString().slice(0, 7);

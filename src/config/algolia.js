@@ -97,5 +97,4 @@ export const searchConfig = {
   ]
 };
 
-export { algoliaConfig, searchClient, searchIndex, isAlgoliaConfigured };
-export default algoliaConfig;
+export {  searchClient, searchIndex, isAlgoliaConfigured };

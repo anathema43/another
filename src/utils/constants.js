@@ -21,26 +21,26 @@ export const BUSINESS_HOURS = {
   sunday: 'Sunday: Closed'
 };
 
-export const SHIPPING_INFO = {
+const SHIPPING_INFO = {
   freeShippingThreshold: 500,
   domesticDelivery: '3-7 business days',
   internationalDelivery: '7-14 business days',
   processingTime: '2-5 business days'
 };
 
-export const RETURN_POLICY = {
+const RETURN_POLICY = {
   returnWindow: 7, // days
   refundMethods: ['Credit/Debit cards: 5-7 business days', 'UPI/Digital wallets: 2-3 business days', 'Cash on Delivery: Bank transfer within 7 days']
 };
 
-export const SOCIAL_MEDIA = {
+const SOCIAL_MEDIA = {
   twitter: 'https://twitter.com/darjeelingsouls',
   facebook: 'https://facebook.com/darjeelingsouls',
   instagram: 'https://instagram.com/darjeelingsouls',
   pinterest: 'https://pinterest.com/darjeelingsouls'
 };
 
-export const APP_CONFIG = {
+const APP_CONFIG = {
   name: 'Darjeeling Souls',
   tagline: 'Authentic Darjeeling Hill Products',
   description: 'Handpicked, Organically Grown in the Darjeeling Hills',
@@ -48,7 +48,7 @@ export const APP_CONFIG = {
   defaultLanguage: 'en'
 };
 
-export const PAYMENT_METHODS = {
+const PAYMENT_METHODS = {
   razorpay: {
     name: 'Razorpay',
     description: 'Cards, UPI, Net Banking, Wallets',
@@ -64,7 +64,7 @@ export const PAYMENT_METHODS = {
   }
 };
 
-export const ERROR_MESSAGES = {
+const ERROR_MESSAGES = {
   network: 'Network error: Please check your internet connection',
   auth: 'Authentication failed: Please check your credentials',
   payment: 'Payment processing failed: Please try again',
@@ -72,7 +72,7 @@ export const ERROR_MESSAGES = {
   validation: 'Please check your input and try again'
 };
 
-export const SUCCESS_MESSAGES = {
+const SUCCESS_MESSAGES = {
   orderPlaced: 'Order placed successfully!',
   productAdded: 'Product added to cart',
   profileUpdated: 'Profile updated successfully',
