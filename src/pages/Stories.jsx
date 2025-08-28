@@ -69,12 +69,13 @@ export default function Stories() {
   const handleDeleteStory = async (storyId) => {
     if (!window.confirm('Are you sure you want to delete this story?')) return;
     
-        if (!db) {
-          console.warn('Firebase not configured - cannot delete story');
-          return;
-        }
-        const { doc, deleteDoc } = await import('firebase/firestore');
-        await deleteDoc(doc(db, 'stories', storyId));
+    try {
+      if (!db) {
+        console.warn('Firebase not configured - cannot delete story');
+        return;
+      }
+      const { doc, deleteDoc } = await import('firebase/firestore');
+      await deleteDoc(doc(db, 'stories', storyId));
       setStories(stories.filter(s => s.id !== storyId));
       if (featuredStory?.id === storyId) {
         setFeaturedStory(null);
@@ -307,79 +308,79 @@ export default function Stories() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredStories.map((story) => (
-              <article key={story.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div className="relative">
-                  <ResponsiveImage
-                    src={story.featuredImage}
-                    alt={story.title}
-                    className="w-full h-48"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-organic-highlight text-white px-2 py-1 rounded-full text-xs font-semibold capitalize">
-                      {(story.category || '').replace('-', ' ')}
-                    </span>
-                  </div>
-                  {/* Admin Controls */}
-                  {isAdmin && (
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      <button
-                        onClick={() => handleEditStory(story)}
-                        className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
-                        title="Edit Story"
-                      >
-                        <PencilIcon className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteStory(story.id)}
-                        className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors"
-                        title="Delete Story"
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <img 
-                      src={story.authorImage} 
-                      alt={story.author}
-                      className="w-8 h-8 rounded-full object-cover"
+                <article key={story.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                  <div className="relative">
+                    <ResponsiveImage
+                      src={story.featuredImage}
+                      alt={story.title}
+                      className="w-full h-48"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                    <div className="text-sm">
-                      <p className="font-medium text-organic-text">{story.author}</p>
-                      <div className="flex items-center gap-2 text-organic-text opacity-75">
-                        <CalendarIcon className="w-3 h-3" />
-                        <span>{new Date(story.publishedAt).toLocaleDateString()}</span>
-                        <span>•</span>
-                        <ClockIcon className="w-3 h-3" />
-                        <span>{story.readTime}</span>
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-organic-highlight text-white px-2 py-1 rounded-full text-xs font-semibold capitalize">
+                        {(story.category || '').replace('-', ' ')}
+                      </span>
+                    </div>
+                    {/* Admin Controls */}
+                    {isAdmin && (
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        <button
+                          onClick={() => handleEditStory(story)}
+                          className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
+                          title="Edit Story"
+                        >
+                          <PencilIcon className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteStory(story.id)}
+                          className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors"
+                          title="Delete Story"
+                        >
+                          <TrashIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <img 
+                        src={story.authorImage} 
+                        alt={story.author}
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                      <div className="text-sm">
+                        <p className="font-medium text-organic-text">{story.author}</p>
+                        <div className="flex items-center gap-2 text-organic-text opacity-75">
+                          <CalendarIcon className="w-3 h-3" />
+                          <span>{new Date(story.publishedAt).toLocaleDateString()}</span>
+                          <span>•</span>
+                          <ClockIcon className="w-3 h-3" />
+                          <span>{story.readTime}</span>
+                        </div>
                       </div>
                     </div>
+                    <h3 className="font-display text-xl font-bold text-organic-text mb-3 line-clamp-2">
+                      {story.title}
+                    </h3>
+                    <p className="text-organic-text opacity-75 mb-4 line-clamp-3">
+                      {story.excerpt}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {story.tags?.slice(0, 2).map(tag => (
+                        <span key={tag} className="bg-organic-background text-organic-text px-2 py-1 rounded-full text-xs">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link 
+                      to={`/stories/${story.id}`}
+                      className="inline-flex items-center gap-2 text-organic-primary font-semibold hover:text-organic-highlight transition-colors"
+                    >
+                      Read More
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </Link>
                   </div>
-                  <h3 className="font-display text-xl font-bold text-organic-text mb-3 line-clamp-2">
-                    {story.title}
-                  </h3>
-                  <p className="text-organic-text opacity-75 mb-4 line-clamp-3">
-                    {story.excerpt}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {story.tags?.slice(0, 2).map(tag => (
-                      <span key={tag} className="bg-organic-background text-organic-text px-2 py-1 rounded-full text-xs">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <Link 
-                    to={`/stories/${story.id}`}
-                    className="inline-flex items-center gap-2 text-organic-primary font-semibold hover:text-organic-highlight transition-colors"
-                  >
-                    Read More
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              </article>
+                </article>
               ))}
             </div>
           )}
