@@ -24,6 +24,7 @@ export const useCategoryStore = create((set, get) => ({
         {
           id: 'demo-category-1',
           name: 'Pickles & Preserves',
+          slug: 'pickle',
           description: 'Traditional pickles and preserved foods from the hills',
           imageUrl: 'https://images.pexels.com/photos/4198017/pexels-photo-4198017.jpeg?auto=compress&cs=tinysrgb&w=800',
           createdAt: new Date().toISOString()
@@ -31,6 +32,7 @@ export const useCategoryStore = create((set, get) => ({
         {
           id: 'demo-category-2',
           name: 'Wild Honey',
+          slug: 'honey',
           description: 'Pure, raw honey collected from high-altitude forests',
           imageUrl: 'https://images.pexels.com/photos/1638280/pexels-photo-1638280.jpeg?auto=compress&cs=tinysrgb&w=800',
           createdAt: new Date().toISOString()
@@ -38,6 +40,7 @@ export const useCategoryStore = create((set, get) => ({
         {
           id: 'demo-category-3',
           name: 'Heritage Grains',
+          slug: 'grains',
           description: 'Ancient grain varieties grown in terraced mountain fields',
           imageUrl: 'https://images.pexels.com/photos/33239/wheat-field-wheat-cereals-grain.jpg?auto=compress&cs=tinysrgb&w=800',
           createdAt: new Date().toISOString()
@@ -45,6 +48,7 @@ export const useCategoryStore = create((set, get) => ({
         {
           id: 'demo-category-4',
           name: 'Mountain Spices',
+          slug: 'spices',
           description: 'Aromatic spice blends from high-altitude regions',
           imageUrl: 'https://images.pexels.com/photos/4198015/pexels-photo-4198015.jpeg?auto=compress&cs=tinysrgb&w=800',
           createdAt: new Date().toISOString()
@@ -108,6 +112,7 @@ export const useCategoryStore = create((set, get) => ({
     try {
       const categoryData = {
         ...newCategory,
+        slug: newCategory.slug || newCategory.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -133,6 +138,7 @@ export const useCategoryStore = create((set, get) => ({
       const ref = doc(db, "categories", id);
       const updateData = {
         ...updatedFields,
+        slug: updatedFields.slug || updatedFields.name?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
         updatedAt: new Date().toISOString()
       };
       

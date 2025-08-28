@@ -297,18 +297,8 @@ class SearchService {
   buildNumericFilters(filters) {
     const numericFilters = [];
 
-    if (filters.priceRange) {
-      if (filters.priceRange.min !== undefined) {
-        numericFilters.push(`price >= ${filters.priceRange.min}`);
-      }
-      if (filters.priceRange.max !== undefined) {
-        numericFilters.push(`price <= ${filters.priceRange.max}`);
-      }
-    }
-
-    if (filters.rating && filters.rating > 0) {
-      numericFilters.push(`rating >= ${filters.rating}`);
-    }
+    // Note: Price and rating filters removed as per requirements
+    // Only keep essential numeric filters if needed in the future
 
     return numericFilters;
   }

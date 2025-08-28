@@ -6,6 +6,7 @@ export default function SearchResults({
   results, 
   isLoading = false, 
   query = '', 
+  onNoResults,
   className = '' 
 }) {
   const { products = [], totalResults = 0, processingTime = 0, error = null } = results || {};
@@ -42,6 +43,17 @@ export default function SearchResults({
   }
 
   if (query && products.length === 0) {
+    // Call onNoResults callback if provided
+    React.useEffect(() => {
+      if (onNoResults) {
+        const timer = setTimeout(() => {
+          onNoResults();
+        }, 2000); // Show message for 2 seconds then redirect
+        
+        return () => clearTimeout(timer);
+      }
+    }, [onNoResults]);
+    
     return (
       <div className={`${className}`} data-cy="no-results-message">
         <div className="text-center py-12">
@@ -52,6 +64,16 @@ export default function SearchResults({
           <p className="text-organic-text opacity-75 mb-4">
             No products found for "<strong>{query}</strong>"
           </p>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-md mx-auto mb-6">
+            <h4 className="font-semibold text-blue-800 mb-2">Don't worry!</h4>
+            <p className="text-blue-700 text-sm mb-4">
+              We'll show you all our product categories in a moment so you can explore what we have.
+            </p>
+            <div className="text-xs text-blue-600">
+              Redirecting to categories in 2 seconds...
+            </div>
+          </div>
           
           <div className="bg-gray-50 rounded-lg p-4 max-w-md mx-auto" data-cy="search-suggestions">
             <h4 className="font-medium text-organic-text mb-2">Try searching for:</h4>

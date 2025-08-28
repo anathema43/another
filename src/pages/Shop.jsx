@@ -3,7 +3,6 @@ import { useProductStore } from "../store/productStore";
 import { useCategoryStore } from "../store/categoryStore";
 import ProductCard from "../components/ProductCard";
 import AlgoliaSearch from "../components/AlgoliaSearch";
-import SearchFilters from "../components/SearchFilters";
 import SearchResults from "../components/SearchResults";
 import { MagnifyingGlassIcon, FunnelIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import ResponsiveImage from "../components/ResponsiveImage";
@@ -16,7 +15,7 @@ export default function Shop() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [viewMode, setViewMode] = useState('categories'); // 'categories' or 'products'
+  const [currentView, setCurrentView] = useState('categories'); // 'categories', 'products_by_category', 'search_results'
 
   React.useEffect(() => {
     // Always fetch products from Firestore - single source of truth
@@ -34,58 +33,49 @@ export default function Shop() {
     setSearchResults(results);
     setSearchQuery(results.query || "");
     setIsSearching(false);
-    setViewMode('products');
+    if (results.totalResults > 0) {
+      setCurrentView('search_results');
+    } else {
+      // No results found - will be handled by SearchResults component
+      setCurrentView('search_results');
+    }
   };
 
   const handleSearchClear = () => {
     setSearchResults(null);
     setSearchQuery("");
     setIsSearching(false);
-    setViewMode('categories');
+    setCurrentView('categories');
+    setSelectedCategory(null);
+  };
+
+  const handleNoResults = () => {
+    // Called when search has no results - return to categories
+    setCurrentView('categories');
+    setSearchResults(null);
+    setSearchQuery("");
     setSelectedCategory(null);
   };
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    setViewMode('products');
+    setCurrentView('products_by_category');
     setSearchResults(null);
     setSearchQuery("");
   };
 
   const handleBackToCategories = () => {
-    setViewMode('categories');
+    setCurrentView('categories');
     setSelectedCategory(null);
     setSearchResults(null);
     setSearchQuery("");
-  };
-
-  const handleFiltersChange = async (filters) => {
-    if (searchQuery) {
-      setIsSearching(true);
-      try {
-        const categoryFilter = selectedCategory ? { categories: [selectedCategory.name] } : {};
-        const combinedFilters = { ...filters, ...categoryFilter };
-        const results = await searchService.searchProducts(searchQuery, combinedFilters);
-        setSearchResults({
-          products: results.hits,
-          totalResults: results.nbHits,
-          query: searchQuery,
-          processingTime: results.processingTimeMS,
-          facets: results.facets
-        });
-      } catch (error) {
-        console.error('Filter search error:', error);
-      } finally {
-        setIsSearching(false);
-      }
-    }
   };
 
   // Determine what to display
   const displayProducts = searchResults 
     ? searchResults.products 
     : selectedCategory 
-      ? products.filter(p => p.category === selectedCategory.name.toLowerCase().replace(/\s+/g, '-'))
+      ? products.filter(p => p.category === selectedCategory.slug)
       : products;
   const showSearchResults = searchResults !== null;
 
@@ -95,7 +85,7 @@ export default function Shop() {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center gap-4">
-            {(viewMode === 'products' || searchResults) && (
+            {(currentView !== 'categories') && (
               <button
                 onClick={handleBackToCategories}
                 className="flex items-center gap-2 text-organic-primary hover:text-organic-text"
@@ -120,45 +110,34 @@ export default function Shop() {
       </header>
 
       <section className="max-w-7xl mx-auto px-6 py-8">
-        {/* Search Bar - Always Visible */}
-        <section className="bg-white rounded-lg shadow-sm p-6 mb-8" aria-label="Product search">
-          <div className="space-y-4">
-            <div className="flex flex-col md:flex-row gap-4 items-start">
-              <div className="flex-1">
-                <AlgoliaSearch
-                  onResults={handleSearchResults}
-                  onClear={handleSearchClear}
-                  className="w-full"
-                />
-              </div>
-              
-              <SearchFilters
-                onFiltersChange={handleFiltersChange}
-                facets={searchResults?.facets || {}}
-              />
+        {/* Search Bar - Simple and Clean */}
+        <div className="mb-8" aria-label="Product search">
+          <AlgoliaSearch
+            onResults={handleSearchResults}
+            onClear={handleSearchClear}
+            className="w-full"
+          />
+          
+          {showSearchResults && (
+            <div className="flex items-center justify-between text-sm text-gray-600 mt-4">
+              <span>
+                {searchResults.totalResults} results for "{searchQuery}"
+                {searchResults.processingTime && (
+                  <span className="ml-2">({searchResults.processingTime}ms)</span>
+                )}
+              </span>
+              <button
+                onClick={handleSearchClear}
+                className="text-organic-primary hover:text-organic-text"
+              >
+                Clear search
+              </button>
             </div>
-
-            {showSearchResults && (
-              <div className="flex items-center justify-between text-sm text-gray-600">
-                <span>
-                  {searchResults.totalResults} results for "{searchQuery}"
-                  {searchResults.processingTime && (
-                    <span className="ml-2">({searchResults.processingTime}ms)</span>
-                  )}
-                </span>
-                <button
-                  onClick={handleSearchClear}
-                  className="text-organic-primary hover:text-organic-text"
-                >
-                  Clear search
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
+          )}
+        </div>
 
         {/* Category Grid View */}
-        {viewMode === 'categories' && !searchResults && (
+        {currentView === 'categories' && (
           <section aria-label="Product categories">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-organic-text mb-4">Shop by Category</h2>
@@ -174,7 +153,7 @@ export default function Shop() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {/* All Products Card */}
                 <button
-                  onClick={() => handleCategorySelect({ name: 'All Products', description: 'Browse our complete collection' })}
+                  onClick={() => handleCategorySelect({ name: 'All Products', slug: 'all', description: 'Browse our complete collection' })}
                   className="bg-gradient-to-br from-organic-primary to-organic-highlight text-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-left"
                 >
                   <div className="h-48 flex items-center justify-center bg-organic-text">
@@ -214,7 +193,7 @@ export default function Shop() {
         )}
 
         {/* Products View */}
-        {(viewMode === 'products' || searchResults) && (loading && !showSearchResults ? (
+        {currentView !== 'categories' && (loading && !showSearchResults ? (
           <div className="flex justify-center py-12" role="status" aria-label="Loading products">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-organic-primary"></div>
             <span className="sr-only">Loading products...</span>
@@ -227,6 +206,7 @@ export default function Shop() {
                 results={searchResults}
                 isLoading={isSearching}
                 query={searchQuery}
+                onNoResults={handleNoResults}
               />
             ) : (
               <section aria-label="Product catalog">
@@ -242,7 +222,7 @@ export default function Shop() {
                       <div>
                         <p className="text-gray-600">
                           Showing {displayProducts.length} products
-                          {selectedCategory && selectedCategory.name !== 'All Products' && (
+                          {selectedCategory && selectedCategory.slug !== 'all' && (
                             <span> in {selectedCategory.name}</span>
                           )}
                         </p>
