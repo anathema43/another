@@ -45,7 +45,6 @@ export default function Admin() {
   const [editingArtisan, setEditingArtisan] = useState(null);
   const [editingStory, setEditingStory] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [editingCategory, setEditingCategory] = useState(null);
   const [stories, setStories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
