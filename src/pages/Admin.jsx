@@ -49,7 +49,6 @@ export default function Admin() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [productManagementView, setProductManagementView] = useState('manage'); // 'add' or 'manage'
 
   // Use data from appropriate stores
