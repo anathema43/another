@@ -22,6 +22,16 @@
     "cy:run": "cypress run",
     "cy:run:critical": "cypress run --spec \"cypress/e2e/01-authentication.cy.js,cypress/e2e/02-product-browsing.cy.js,cypress/e2e/03-checkout.cy.js\"",
     "cy:run:persistence": "cypress run --spec \"cypress/e2e/cart-persistence.cy.js,cypress/e2e/wishlist-persistence.cy.js,cypress/e2e/authentication-routing.cy.js\"",
+    "cy:run:all": "cypress run --spec \"cypress/e2e/*.cy.js\"",
+    "cy:run:auth": "cypress run --spec \"cypress/e2e/01-authentication.cy.js\"",
+    "cy:run:shop": "cypress run --spec \"cypress/e2e/02-product-browsing.cy.js\"",
+    "cy:run:cart": "cypress run --spec \"cypress/e2e/03-shopping-cart.cy.js\"",
+    "cy:run:checkout": "cypress run --spec \"cypress/e2e/04-checkout-process.cy.js\"",
+    "cy:run:admin": "cypress run --spec \"cypress/e2e/05-admin-functionality.cy.js\"",
+    "cy:run:security": "cypress run --spec \"cypress/e2e/13-security-testing.cy.js\"",
+    "cy:run:search": "cypress run --spec \"cypress/e2e/18-algolia-search.cy.js\"",
+    "cy:run:cultural": "cypress run --spec \"cypress/e2e/17-artisan-cultural-content.cy.js\"",
+    "cy:run:realtime": "cypress run --spec \"cypress/e2e/12-real-time-features.cy.js\"",
     "test:persistence": "vitest run src/components/__tests__/CartPersistence.test.jsx src/components/__tests__/WishlistFunctionality.test.jsx src/components/__tests__/AuthenticationRouting.test.jsx",
     "update-logo": "node scripts/update-logo.js"
   },
@@ -33,8 +43,6 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.1",
     "react-router-dom": "^6.24.1",
-    "react-router-hash-link": "^2.4.3",
-    "razorpay": "^2.9.4",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
