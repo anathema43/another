@@ -21,13 +21,7 @@ export default function Shop() {
     // Always fetch products from Firestore - single source of truth
     fetchProducts();
     fetchCategories();
-  }, [products.length, fetchProducts]);
-
-  React.useEffect(() => {
-    if (categories.length === 0) {
-      fetchCategories();
-    }
-  }, [categories.length, fetchCategories]);
+  }, [fetchProducts, fetchCategories]);
 
   const handleSearchResults = (results) => {
     setSearchResults(results);
@@ -71,12 +65,51 @@ export default function Shop() {
     setSearchQuery("");
   };
 
-  // Determine what to display
-  const displayProducts = searchResults 
-    ? searchResults.products 
-    : selectedCategory 
-      ? products.filter(p => p.category === selectedCategory.slug)
-      : products;
+  // Get unique categories from products if categories store is empty
+  const displayCategories = React.useMemo(() => {
+    if (categories.length > 0) {
+      return categories;
+    }
+    
+    // Generate categories from products
+    const productCategories = [...new Set(products.map(p => p.category))].filter(Boolean);
+    return productCategories.map(category => ({
+      id: `product-category-${category}`,
+      name: category.charAt(0).toUpperCase() + category.slice(1),
+      slug: category,
+      description: `Authentic ${category} products from the Darjeeling hills`,
+      imageUrl: getDefaultCategoryImage(category)
+    }));
+  }, [categories, products]);
+
+  // Get default image for category
+  const getDefaultCategoryImage = (category) => {
+    const categoryImages = {
+      pickle: 'https://images.pexels.com/photos/4198017/pexels-photo-4198017.jpeg?auto=compress&cs=tinysrgb&w=800',
+      honey: 'https://images.pexels.com/photos/1638280/pexels-photo-1638280.jpeg?auto=compress&cs=tinysrgb&w=800',
+      grains: 'https://images.pexels.com/photos/33239/wheat-field-wheat-cereals-grain.jpg?auto=compress&cs=tinysrgb&w=800',
+      spices: 'https://images.pexels.com/photos/4198015/pexels-photo-4198015.jpeg?auto=compress&cs=tinysrgb&w=800',
+      dairy: 'https://images.pexels.com/photos/773253/pexels-photo-773253.jpeg?auto=compress&cs=tinysrgb&w=800'
+    };
+    return categoryImages[category] || 'https://images.pexels.com/photos/4198017/pexels-photo-4198017.jpeg?auto=compress&cs=tinysrgb&w=800';
+  };
+
+  // Determine what products to display
+  const displayProducts = React.useMemo(() => {
+    if (searchResults) {
+      return searchResults.products;
+    }
+    
+    if (selectedCategory) {
+      if (selectedCategory.slug === 'all') {
+        return products;
+      }
+      return products.filter(p => p.category === selectedCategory.slug);
+    }
+    
+    return products;
+  }, [searchResults, selectedCategory, products]);
+
   const showSearchResults = searchResults !== null;
 
   return (
@@ -144,7 +177,7 @@ export default function Shop() {
               <p className="text-organic-text opacity-75">Choose a category to explore our authentic products</p>
             </div>
             
-            {categoriesLoading ? (
+            {(categoriesLoading || loading) ? (
               <div className="flex justify-center py-12" role="status" aria-label="Loading categories">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-organic-primary"></div>
                 <span className="sr-only">Loading categories...</span>
@@ -153,13 +186,18 @@ export default function Shop() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {/* All Products Card */}
                 <button
-                  onClick={() => handleCategorySelect({ name: 'All Products', slug: 'all', description: 'Browse our complete collection' })}
+                  onClick={() => handleCategorySelect({ 
+                    name: 'All Products', 
+                    slug: 'all', 
+                    description: 'Browse our complete collection' 
+                  })}
                   className="bg-gradient-to-br from-organic-primary to-organic-highlight text-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-left"
                 >
                   <div className="h-48 flex items-center justify-center bg-organic-text">
                     <div className="text-center">
                       <div className="text-4xl mb-2">🏔️</div>
                       <div className="text-xl font-bold">All Products</div>
+                      <div className="text-sm opacity-90 mt-1">{products.length} items</div>
                     </div>
                   </div>
                   <div className="p-4">
@@ -169,36 +207,42 @@ export default function Shop() {
                 </button>
 
                 {/* Category Cards */}
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => handleCategorySelect(category)}
-                    className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-left"
-                  >
-                    <ResponsiveImage
-                      src={category.imageUrl}
-                      alt={category.name}
-                      className="w-full h-48"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    />
-                    <div className="p-4">
-                      <h3 className="font-semibold text-organic-text text-lg mb-2">{category.name}</h3>
-                      <p className="text-organic-text opacity-75 text-sm">{category.description}</p>
-                    </div>
-                  </button>
-                ))}
+                {displayCategories.map((category) => {
+                  const categoryProductCount = products.filter(p => p.category === category.slug).length;
+                  
+                  return (
+                    <button
+                      key={category.id}
+                      onClick={() => handleCategorySelect(category)}
+                      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-left"
+                    >
+                      <div className="relative">
+                        <ResponsiveImage
+                          src={category.imageUrl}
+                          alt={category.name}
+                          className="w-full h-48"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        />
+                        <div className="absolute top-2 right-2 bg-white bg-opacity-90 rounded-full px-2 py-1">
+                          <span className="text-xs font-semibold text-organic-text">
+                            {categoryProductCount} items
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold text-organic-text text-lg mb-2">{category.name}</h3>
+                        <p className="text-organic-text opacity-75 text-sm">{category.description}</p>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </section>
         )}
 
         {/* Products View */}
-        {currentView !== 'categories' && (loading && !showSearchResults ? (
-          <div className="flex justify-center py-12" role="status" aria-label="Loading products">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-organic-primary"></div>
-            <span className="sr-only">Loading products...</span>
-          </div>
-        ) : (
+        {currentView !== 'categories' && (
           <>
             {/* Search Results or Product Grid */}
             {showSearchResults ? (
@@ -210,16 +254,39 @@ export default function Shop() {
               />
             ) : (
               <section aria-label="Product catalog">
-                {displayProducts.length === 0 ? (
+                {loading ? (
+                  <div className="flex justify-center py-12" role="status" aria-label="Loading products">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-organic-primary"></div>
+                    <span className="sr-only">Loading products...</span>
+                  </div>
+                ) : displayProducts.length === 0 ? (
                   <div className="text-center py-12" data-cy="no-results-message">
-                    <p className="text-gray-500 text-lg">
-                      No products found.
+                    <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold text-organic-text mb-2">No Products Found</h3>
+                    <p className="text-organic-text opacity-75 mb-6">
+                      {selectedCategory && selectedCategory.slug !== 'all' 
+                        ? `No products available in the ${selectedCategory.name} category yet.`
+                        : 'No products available yet.'
+                      }
                     </p>
+                    <button
+                      onClick={handleBackToCategories}
+                      className="bg-organic-primary text-white px-6 py-3 rounded-lg hover:opacity-90"
+                    >
+                      Browse Other Categories
+                    </button>
                   </div>
                 ) : (
                   <div>
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between items-center mb-6">
                       <div>
+                        <h2 className="text-2xl font-bold text-organic-text mb-2">
+                          {selectedCategory?.name || 'All Products'}
+                        </h2>
                         <p className="text-gray-600">
                           Showing {displayProducts.length} products
                           {selectedCategory && selectedCategory.slug !== 'all' && (
@@ -240,7 +307,7 @@ export default function Shop() {
               </section>
             )}
           </>
-        ))}
+        )}
       </section>
     </main>
   );

@@ -32,18 +32,21 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { useAuthStore } from "./store/authStore";
 import { useCartStore } from "./store/cartStore";
 import { useWishlistStore } from "./store/wishlistStore";
+import { useCategoryStore } from "./store/categoryStore";
 import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
   const { fetchUser, loading } = useAuthStore();
   const { loadCart, subscribeToCart } = useCartStore();
   const { loadWishlist, subscribeToWishlist } = useWishlistStore();
+  const { fetchCategories } = useCategoryStore();
   
   useEffect(() => {
     try {
       const unsub = fetchUser();
       loadCart();
       loadWishlist();
+      fetchCategories();
       
       // Set up real-time listeners when user is authenticated
       const { currentUser } = useAuthStore.getState();
@@ -56,7 +59,7 @@ function App() {
     } catch (error) {
       // Firebase not configured, running in demo mode
     }
-  }, [fetchUser, loadCart, loadWishlist, subscribeToCart, subscribeToWishlist]);
+  }, [fetchUser, loadCart, loadWishlist, subscribeToCart, subscribeToWishlist, fetchCategories]);
 
   if (loading) {
     return <LoadingSpinner />;

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useProductStore } from '../store/productStore';
 import { useOrderStore } from '../store/orderStore';
 import { useArtisanStore } from '../store/artisanStore';
+import { useCategoryStore } from '../store/categoryStore';
 import { useAuthStore } from '../store/authStore';
 import ProductFormModal from '../components/ProductFormModal';
 import ArtisanFormModal from '../components/ArtisanFormModal';
+import CategoryFormModal from '../components/CategoryFormModal';
 import BulkProductUpload from '../components/BulkProductUpload';
 import AdminSeedButton from '../components/AdminSeedButton';
 import ArtisanSeedButton from '../components/ArtisanSeedButton';
@@ -32,17 +34,19 @@ export default function Admin() {
   const { products, fetchProducts, updateProduct, deleteProduct } = useProductStore();
   const { orders: orderStoreOrders, fetchOrders: fetchOrdersFromStore, updateOrderStatus: updateOrderStatusInStore } = useOrderStore();
   const { artisans: artisanStoreArtisans, fetchArtisans: fetchArtisansFromStore, deleteArtisan } = useArtisanStore();
+  const { categories: categoryStoreCategories, fetchCategories: fetchCategoriesFromStore, deleteCategory: deleteCategoryFromStore } = useCategoryStore();
   
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showProductModal, setShowProductModal] = useState(false);
   const [showArtisanModal, setShowArtisanModal] = useState(false);
   const [showStoryModal, setShowStoryModal] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [editingArtisan, setEditingArtisan] = useState(null);
   const [editingStory, setEditingStory] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
   const [stories, setStories] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -53,8 +57,8 @@ export default function Admin() {
   const displayProducts = products.length > 0 ? products : [];
   const displayOrders = orderStoreOrders.length > 0 ? orderStoreOrders : [];
   const displayArtisans = artisanStoreArtisans.length > 0 ? artisanStoreArtisans : [];
+  const displayCategories = categoryStoreCategories.length > 0 ? categoryStoreCategories : [];
   const displayStories = stories.length > 0 ? stories : [];
-  const displayCategories = categories.length > 0 ? categories : [];
 
   useEffect(() => {
     // Fetch data when component mounts
@@ -63,50 +67,16 @@ export default function Admin() {
         await fetchProducts();
         await fetchOrdersFromStore();
         await fetchArtisansFromStore();
+        await fetchCategoriesFromStore();
         await fetchStories();
-        await fetchCategories();
       } catch (error) {
         console.error('Error loading admin data:', error);
       }
     };
 
     loadData();
-  }, [fetchProducts, fetchOrdersFromStore, fetchArtisansFromStore]);
+  }, [fetchProducts, fetchOrdersFromStore, fetchArtisansFromStore, fetchCategoriesFromStore]);
 
-  // Fetch categories
-  const fetchCategories = async () => {
-    try {
-      if (!db) {
-        // Use demo categories
-        const demoCategories = [
-          {
-            id: 'demo-category-1',
-            name: 'Pickles & Preserves',
-            description: 'Traditional pickles and preserved foods from the hills',
-            imageUrl: 'https://images.pexels.com/photos/4198017/pexels-photo-4198017.jpeg?auto=compress&cs=tinysrgb&w=800'
-          },
-          {
-            id: 'demo-category-2',
-            name: 'Wild Honey',
-            description: 'Pure, raw honey collected from high-altitude forests',
-            imageUrl: 'https://images.pexels.com/photos/1638280/pexels-photo-1638280.jpeg?auto=compress&cs=tinysrgb&w=800'
-          }
-        ];
-        setCategories(demoCategories);
-        return;
-      }
-      
-      const { collection, getDocs } = await import('firebase/firestore');
-      const querySnapshot = await getDocs(collection(db, 'categories'));
-      const categoriesData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setCategories(categoriesData);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
 
   // Fetch stories
   const fetchStories = async () => {
@@ -242,13 +212,7 @@ export default function Admin() {
   const handleDeleteCategory = async (categoryId) => {
     if (window.confirm('Are you sure you want to delete this category?')) {
       try {
-        if (!db) {
-          console.warn('Firebase not configured - cannot delete category');
-          return;
-        }
-        const { deleteDoc, doc } = await import('firebase/firestore');
-        await deleteDoc(doc(db, 'categories', categoryId));
-        await fetchCategories(); // Refresh categories list
+        await deleteCategoryFromStore(categoryId);
       } catch (error) {
         alert('Error deleting category: ' + error.message);
       }
@@ -279,8 +243,8 @@ export default function Admin() {
     // Refresh data
     fetchProducts();
     fetchArtisansFromStore();
+    fetchCategoriesFromStore();
     fetchStories();
-    fetchCategories();
   };
 
   return (

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
+import { useCategoryStore } from '../store/categoryStore';
 import ImageUpload from './ImageUpload';
 import LoadingButton from './LoadingButton';
 
 export default function CategoryFormModal({ category, onClose, onSave }) {
+  const { addCategory, updateCategory } = useCategoryStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -51,26 +51,17 @@ export default function CategoryFormModal({ category, onClose, onSave }) {
         throw new Error('Category name is required');
       }
 
-      if (!db) {
-        setError('Demo mode - category would be saved in production');
-        setTimeout(() => {
-          onSave();
-        }, 1000);
-        return;
-      }
 
       const categoryData = {
         ...formData,
         name: formData.name.trim(),
         description: formData.description.trim(),
-        updatedAt: new Date().toISOString()
       };
 
       if (category) {
-        await updateDoc(doc(db, 'categories', category.id), categoryData);
+        await updateCategory(category.id, categoryData);
       } else {
-        categoryData.createdAt = new Date().toISOString();
-        await addDoc(collection(db, 'categories'), categoryData);
+        await addCategory(categoryData);
       }
 
       onSave();
